@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "skills": {
+    "agents-sdk": {
+      "source": "cloudflare/com",
+      "sourceType": "well-known",
+      "computedHash": "ee8445129b8b6e4732492ed7c0f0b32c6a20c2a289dbbbdfb84b3c17047b0659"
+    },
+    "building-ai-agent-on-cloudflare": {
+      "source": "cloudflare/com",
+      "sourceType": "well-known",
+      "computedHash": "83b06457499cc0d6791a44b04504018fa131fc027c631d7e1b28fe5bfc7932ac"
+    },
+    "building-mcp-server-on-cloudflare": {
+      "source": "cloudflare/com",
+      "sourceType": "well-known",
+      "computedHash": "b2785b1e1b2e0e764807bb9af0a878ff5d22c6ff379781e018a8ee062bcaf88c"
+    },
+    "cloudflare": {
+      "source": "cloudflare/com",
+      "sourceType": "well-known",
+      "computedHash": "15db5cc939ccaf9ca9f47fb57cb4cb407f6440e0e5c40ba1b85148b330604231"
+    },
+    "durable-objects": {
+      "source": "cloudflare/com",
+      "sourceType": "well-known",
+      "computedHash": "5a1487439fe3fdbe16b72215c9de1155aff1210abe2f0f0e49964488c66ee35a"
+    },
+    "sandbox-sdk": {
+      "source": "cloudflare/com",
+      "sourceType": "well-known",
+      "computedHash": "88b13f09ddec64523b86fb9ec957743fe7e41e0224eb9e71ae71315d66b1879d"
+    },
+    "web-perf": {
+      "source": "cloudflare/com",
+      "sourceType": "well-known",
+      "computedHash": "8cdc8375260e5d00466e16df7c76b5a19cf434e7cb0bd905c70921bc28a2c06d"
+    },
+    "workers-best-practices": {
+      "source": "cloudflare/com",
+      "sourceType": "well-known",
+      "computedHash": "420e1ad3eaeb8ed2016e6b34fff3757de6aa39899ec2bd6e9784a29c38e70f9a"
+    },
+    "wrangler": {
+      "source": "cloudflare/com",
+      "sourceType": "well-known",
+      "computedHash": "6689701b4ec7e5c626db8f84eea5ecc59e1ea5d4328219a971ba41426361dfde"
+    }
+  }
+}
