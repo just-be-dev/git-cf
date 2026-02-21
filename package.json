@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "wrangler dev --local",
-    "deploy": "npm run build:css && wrangler deploy",
+    "deploy": "bun run build:css && wrangler deploy",
     "build:css": "postcss ./src/assets/app.css --verbose -o ./src/assets/dist/app.css --minify",
     "watch:css": "postcss ./src/assets/app.css --verbose -o ./src/assets/dist/app.css --watch",
     "test": "ava",

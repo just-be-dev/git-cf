@@ -1,0 +1,54 @@
+[tools]
+bun = "latest"
+
+[tasks.dev]
+description = "Start development server"
+run = "bun run dev"
+
+[tasks.deploy]
+description = "Build and deploy to Cloudflare"
+run = "bun run deploy"
+
+[tasks."build:css"]
+description = "Build CSS with PostCSS"
+run = "bun run build:css"
+
+[tasks."watch:css"]
+description = "Watch and rebuild CSS"
+run = "bun run watch:css"
+
+[tasks.test]
+description = "Run tests"
+run = "bun run test"
+
+[tasks."test:workers"]
+description = "Run worker tests with Vitest"
+run = "bun run test:workers"
+
+[tasks."test:auth"]
+description = "Run auth tests with Vitest"
+run = "bun run test:auth"
+
+[tasks.format]
+description = "Format code with Prettier"
+run = "bun run format"
+
+[tasks."format:check"]
+description = "Check code formatting"
+run = "bun run format:check"
+
+[tasks.typecheck]
+description = "Type check with TypeScript"
+run = "bun run typecheck"
+
+[tasks."cf-typegen"]
+description = "Generate Cloudflare types"
+run = "bun run cf-typegen"
+
+[tasks."db:gen"]
+description = "Generate database migrations"
+run = "bun run db:gen"
+
+[tasks.install]
+description = "Install dependencies"
+run = "bun install"
