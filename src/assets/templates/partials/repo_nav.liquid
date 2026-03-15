@@ -1,8 +1,8 @@
 <header class="page-header">
   <div class="font-semibold text-lg">
-    <a href="/{{ owner }}" class="hover:text-blue-600 dark:hover:text-blue-400">{{ owner }}</a>
-    <span class="text-gray-500 dark:text-gray-400">/</span>
-    <a href="/{{ owner }}/{{ repo }}" class="hover:text-blue-600 dark:hover:text-blue-400">
+    <a href="/{{ owner }}" class="hover:text-indigo-600 dark:hover:text-indigo-400">{{ owner }}</a>
+    <span class="text-zinc-500 dark:text-zinc-400">/</span>
+    <a href="/{{ owner }}/{{ repo }}" class="hover:text-indigo-600 dark:hover:text-indigo-400">
       {{- repo -}}
     </a>
   </div>
@@ -22,12 +22,12 @@
                   {%- endif -%}
                 </span>
               </summary>
-              <div class="fixed sm:absolute inset-x-0 sm:inset-x-auto sm:right-0 sm:left-auto z-20 mt-2 mx-3 sm:mx-0 sm:w-72 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-3 sm:p-2 shadow-xl sm:shadow-lg">
+              <div class="fixed sm:absolute inset-x-0 sm:inset-x-auto sm:right-0 sm:left-auto z-20 mt-2 mx-3 sm:mx-0 sm:w-72 rounded-xl border border-zinc-200 dark:border-zinc-800/60 bg-white dark:bg-zinc-900 p-3 sm:p-2 shadow-xl sm:shadow-lg">
                 <input
                   id="ref-filter"
                   type="text"
                   placeholder="Filter branches/tags"
-                  class="w-full px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900"
+                  class="w-full px-2 py-1.5 text-sm border border-zinc-300 dark:border-zinc-700 rounded-lg bg-white dark:bg-zinc-900"
                   autocomplete="off"
                 >
                 <div
@@ -146,15 +146,15 @@
                     function addSection(title, arr, isBranch) {
                       if (!arr || !arr.length) return;
                       pieces.push(
-                        '<div class="uppercase px-2 py-1 mt-1 text-xs font-semibold text-gray-500 dark:text-gray-400">' +
+                        '<div class="uppercase px-2 py-1 mt-1 text-xs font-semibold text-zinc-500 dark:text-zinc-400">' +
                           title +
                           '</div>'
                       );
                       // Icons for branches and tags
                       var branchIcon =
-                        '<i class="bi bi-git w-4 h-4 flex-shrink-0 text-gray-400 dark:text-gray-500"></i>';
+                        '<i class="bi bi-git w-4 h-4 flex-shrink-0 text-zinc-400 dark:text-zinc-500"></i>';
                       var tagIcon =
-                        '<i class="bi bi-tag-fill w-4 h-4 flex-shrink-0 text-gray-400 dark:text-gray-500"></i>';
+                        '<i class="bi bi-tag-fill w-4 h-4 flex-shrink-0 text-zinc-400 dark:text-zinc-500"></i>';
                       var typeIcon = isBranch ? branchIcon : tagIcon;
 
                       for (var i = 0; i < arr.length; i++) {
@@ -164,7 +164,7 @@
                         var isCurrentRef = raw === currentRef;
                         if (isCurrentRef) {
                           pieces.push(
-                            '<span class="flex items-center gap-2 px-2 py-1.5 rounded bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300">' +
+                            '<span class="flex items-center gap-2 px-2 py-1.5 rounded bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-800 text-indigo-700 dark:text-indigo-300">' +
                               '<i class="bi bi-check-circle-fill w-4 h-4 flex-shrink-0"></i>' +
                               typeIcon +
                               '<span class="font-medium">' +
@@ -176,7 +176,7 @@
                           pieces.push(
                             '<a data-ref="' +
                               raw +
-                              '" class="flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">' +
+                              '" class="flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors">' +
                               '<span class="w-4 h-4 flex-shrink-0"></span>' + // Spacer for check alignment
                               typeIcon +
                               '<span>' +
@@ -192,10 +192,10 @@
                         ? 'Commit: ' + currentRef.substring(0, 7) + '…'
                         : currentRef;
                       pieces.push(
-                        '<div class="uppercase px-2 py-1 text-xs text-gray-500 dark:text-gray-400">Current</div>'
+                        '<div class="uppercase px-2 py-1 text-xs text-zinc-500 dark:text-zinc-400">Current</div>'
                       );
                       pieces.push(
-                        '<span class="flex items-center gap-2 px-2 py-1.5 rounded bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300">' +
+                        '<span class="flex items-center gap-2 px-2 py-1.5 rounded bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-800 text-indigo-700 dark:text-indigo-300">' +
                           '<i class="bi bi-check-circle-fill w-4 h-4 flex-shrink-0"></i>' +
                           '<span class="font-medium">' +
                           currDisp +
@@ -203,7 +203,7 @@
                           '</span>'
                       );
                       pieces.push(
-                        '<div class="my-1 border-t border-gray-200 dark:border-gray-700"></div>'
+                        '<div class="my-1 border-t border-zinc-200 dark:border-zinc-700"></div>'
                       );
                     }
                     addSection('Branches', data.branches || [], true);

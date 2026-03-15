@@ -1,28 +1,29 @@
 {% layout 'layout' %}
 {% block %}
 {% render 'repo_nav', owner: owner, repo: repo, refEnc: refEnc, currentTab: 'browse' %}
+<span class="mb-1 inline-block text-xs font-semibold uppercase tracking-wider text-indigo-500 dark:text-indigo-400">File</span>
 <h2>Blob: {{ fileName }}</h2>
-<div class="blob-container mt-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800/30">
-  <div class="flex items-center justify-between px-3 py-2 border-b border-gray-200 dark:border-gray-700">
-    <div class="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400">
+<div class="blob-container mt-4 border border-zinc-200 dark:border-zinc-800/60 rounded-2xl bg-zinc-50 dark:bg-zinc-900/50">
+  <div class="flex items-center justify-between px-3 py-2 border-b border-zinc-200 dark:border-zinc-800/60">
+    <div class="flex items-center gap-2 text-xs text-zinc-600 dark:text-zinc-400">
       {% if codeLang %}
-        <span class="inline-flex items-center rounded border border-gray-300 dark:border-gray-600 px-2 py-0.5 bg-gray-50 dark:bg-gray-800/50">
+        <span class="inline-flex items-center rounded-lg border border-zinc-300 dark:border-zinc-700 px-2 py-0.5 bg-zinc-50 dark:bg-zinc-800/50">
           {{- codeLang -}}
         </span>
       {% endif %}
       {% if isMarkdown %}
-        <span class="inline-flex items-center rounded border border-gray-300 dark:border-gray-600 px-2 py-0.5 bg-gray-50 dark:bg-gray-800/50">
+        <span class="inline-flex items-center rounded-lg border border-zinc-300 dark:border-zinc-700 px-2 py-0.5 bg-zinc-50 dark:bg-zinc-800/50">
           Markdown
         </span>
       {% endif %}
       {% if isMarkdown or codeLang %}
         {% if lineCount %}
-          <span class="text-gray-500 dark:text-gray-400">
+          <span class="text-zinc-500 dark:text-zinc-400">
             {{- lineCount }} line{% if lineCount != 1 %}s{% endif -%}
           </span>
         {% endif %}
       {% elsif sizeStr %}
-        <span class="text-gray-500 dark:text-gray-400">{{ sizeStr }}</span>
+        <span class="text-zinc-500 dark:text-zinc-400">{{ sizeStr }}</span>
       {% endif %}
     </div>
     <div class="flex items-center gap-2">
@@ -43,12 +44,12 @@
           <summary class="btn secondary sm inline-flex items-center gap-2">
             <i class="bi bi-three-dots w-4 h-4" aria-hidden="true"></i>
           </summary>
-          <div class="fixed inset-x-0 z-20 mt-2 mx-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-2 shadow-xl">
+          <div class="fixed inset-x-0 z-20 mt-2 mx-3 rounded-xl border border-zinc-200 dark:border-zinc-800/60 bg-white dark:bg-zinc-900 p-2 shadow-xl">
             <div class="flex flex-col">
               {% if not isMarkdown and not isImage and not isPdf and not isBinary and not tooLarge %}
                 <button
                   type="button"
-                  class="copy-raw flex items-center gap-2 px-3 py-2 rounded text-left hover:bg-gray-100 dark:hover:bg-gray-700"
+                  class="copy-raw flex items-center gap-2 px-3 py-2 rounded-lg text-left hover:bg-zinc-100 dark:hover:bg-zinc-800"
                 >
                   <i class="bi bi-clipboard w-4 h-4" aria-hidden="true"></i>
                   <span>Copy raw</span>
@@ -57,7 +58,7 @@
               {% unless isImage or isPdf %}
                 <a
                   href="{{ viewRawHref }}"
-                  class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700"
+                  class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800"
                 >
                   <i class="bi bi-file-earmark-text w-4 h-4" aria-hidden="true"></i>
                   <span>View raw</span>
@@ -65,7 +66,7 @@
               {% endunless %}
               <a
                 href="{{ rawHref }}"
-                class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700"
+                class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800"
               >
                 <i class="bi bi-download w-4 h-4" aria-hidden="true"></i>
                 <span>Download</span>

@@ -1,16 +1,17 @@
 {% layout 'layout' %}
 {% block %}
-<header class="page-header">
-  <h2 class="m-0">Error</h2>
-  <div></div>
-</header>
-
-<div class="space-y-6">
-  <div class="alert error">
-    <div class="font-semibold">Something went wrong</div>
-    {% if message %}
-      <div class="mt-1 text-sm muted">{{ message }}</div>
-    {% endif %}
+<div class="space-y-6 animate-slide-up">
+  <div class="flex flex-col items-center gap-4 py-10 text-center">
+    <span class="inline-grid h-14 w-14 place-items-center rounded-full bg-red-50 dark:bg-red-900/20">
+      <i class="bi bi-exclamation-triangle-fill text-red-500 dark:text-red-400" style="font-size: 1.75rem" aria-hidden="true"></i>
+    </span>
+    <div>
+      <span class="mb-2 block text-xs font-semibold uppercase tracking-wider text-red-500 dark:text-red-400">Error</span>
+      <h2 class="m-0 text-xl font-semibold">Something went wrong</h2>
+      {% if message %}
+        <p class="mt-2 text-sm text-zinc-500 dark:text-zinc-400">{{ message }}</p>
+      {% endif %}
+    </div>
   </div>
 
   {% if stack %}

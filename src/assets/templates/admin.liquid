@@ -27,13 +27,13 @@
     <h2 class="text-xl font-semibold mb-4">Repository Overview</h2>
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-3">
       <div>
-        <div class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">
+        <div class="text-xs text-zinc-500 dark:text-zinc-400 uppercase tracking-wide mb-1">
           R2 Packs Storage
         </div>
         <div class="font-mono text-sm">{{ storageSize | default: '0 bytes' }}</div>
       </div>
       <div>
-        <div class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">
+        <div class="text-xs text-zinc-500 dark:text-zinc-400 uppercase tracking-wide mb-1">
           Packs
         </div>
         <div class="font-mono text-sm">
@@ -41,7 +41,7 @@
           {% assign hp = hydrationPackCount %}
           {% if hp or hp == 0 %}
             {% if hp > 0 %}
-              <span class="text-xs text-gray-500">({{ hp }} hydration packs)</span>
+              <span class="text-xs text-zinc-500">({{ hp }} hydration packs)</span>
             {% endif %}
           {% else %}
             {% assign hydrationPacks = 0 %}
@@ -51,26 +51,26 @@
               {% endif %}
             {% endfor %}
             {% if hydrationPacks > 0 %}
-              <span class="text-xs text-gray-500">({{ hydrationPacks }} hydration packs)</span>
+              <span class="text-xs text-zinc-500">({{ hydrationPacks }} hydration packs)</span>
             {% endif %}
           {% endif %}
         </div>
       </div>
       <div>
-        <div class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">
+        <div class="text-xs text-zinc-500 dark:text-zinc-400 uppercase tracking-wide mb-1">
           Next Maintenance
         </div>
         <div class="font-mono text-sm">
           {% if nextMaintenanceIn %}
             <span title="{{ nextMaintenanceAt | default: '' }}">{{ nextMaintenanceIn }}</span>
           {% else %}
-            <span class="text-gray-500">n/a</span>
+            <span class="text-zinc-500">n/a</span>
           {% endif %}
         </div>
       </div>
       {% if state and state.meta and state.meta.doId %}
         <div>
-          <div class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">
+          <div class="text-xs text-zinc-500 dark:text-zinc-400 uppercase tracking-wide mb-1">
             Durable Object ID
           </div>
           <div class="font-mono text-sm relative">
@@ -79,7 +79,7 @@
               {%- if state.meta.doId.size > 12 %}…{% endif %}
             </span>
             <button
-              class="absolute -top-0.5 ml-2 p-1 rounded border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              class="absolute -top-0.5 ml-2 p-1 rounded border border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
               onclick="adminActions.copyDoId('{{ state.meta.doId }}')"
               title="Copy DO ID"
               aria-label="Copy DO ID"
@@ -96,7 +96,7 @@
       {% endif %}
       {% if state.looseR2SampleBytes %}
         <div>
-          <div class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">
+          <div class="text-xs text-zinc-500 dark:text-zinc-400 uppercase tracking-wide mb-1">
             R2 Loose (sample)
           </div>
           <div class="font-mono text-sm">
@@ -107,7 +107,7 @@
               {% assign kb = state.looseR2SampleBytes | divided_by: 1024.0 %}
               {{ kb | round: 1 }} KB
             {% endif %}
-            <span class="text-xs text-gray-500">
+            <span class="text-xs text-zinc-500">
               ({{ state.looseR2SampleCount | default: 0 }} objs
               {%- if state.looseR2Truncated %}, truncated{% endif -%}
               )
@@ -117,7 +117,7 @@
       {% endif %}
       {% if state.dbSizeBytes %}
         <div>
-          <div class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">
+          <div class="text-xs text-zinc-500 dark:text-zinc-400 uppercase tracking-wide mb-1">
             Durable Object Storage
           </div>
           <div class="font-mono text-sm">
@@ -132,7 +132,7 @@
         </div>
       {% endif %}
       <div>
-        <div class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">
+        <div class="text-xs text-zinc-500 dark:text-zinc-400 uppercase tracking-wide mb-1">
           Unpacking
         </div>
         <div class="font-mono text-sm text-amber-600 dark:text-amber-400">
@@ -147,10 +147,10 @@
         </div>
       </div>
       <div>
-        <div class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">
+        <div class="text-xs text-zinc-500 dark:text-zinc-400 uppercase tracking-wide mb-1">
           Hydration
         </div>
-        <div class="font-mono text-sm text-blue-600 dark:text-blue-400">
+        <div class="font-mono text-sm text-indigo-600 dark:text-indigo-400">
           {% if hydrationData and hydrationData.running %}
             {{ hydrationData.stage }}
           {% elsif hydrationData and hydrationData.queued and hydrationData.queued > 0 %}
@@ -163,21 +163,21 @@
         </div>
       </div>
       <div>
-        <div class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">
+        <div class="text-xs text-zinc-500 dark:text-zinc-400 uppercase tracking-wide mb-1">
           HEAD
         </div>
         <div class="font-mono text-sm">
           {% if head and head.target %}
             {{ head.target | replace: 'refs/heads/', '' | replace: 'refs/tags/', '' }}
           {% elsif head and head.unborn %}
-            <span class="text-gray-500">unborn</span>
+            <span class="text-zinc-500">unborn</span>
           {% else %}
-            <span class="text-gray-500">unknown</span>
+            <span class="text-zinc-500">unknown</span>
           {% endif %}
         </div>
       </div>
       <div>
-        <div class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">
+        <div class="text-xs text-zinc-500 dark:text-zinc-400 uppercase tracking-wide mb-1">
           Branches/Tags
         </div>
         <div class="font-mono text-sm">
@@ -199,16 +199,16 @@
   <!-- Hydration Management -->
   <div class="card p-6">
     <h2 class="text-xl font-semibold mb-4">Pack Hydration</h2>
-    <p class="text-gray-600 dark:text-gray-400 mb-4">
+    <p class="text-zinc-600 dark:text-zinc-400 mb-4">
       Hydration builds thick packs used to serve fetches correctly and fast. It’s required for
       correctness, not just performance.
     </p>
     {% if hydrationData.running %}
-      <div class="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+      <div class="mb-4 p-3 bg-indigo-50 dark:bg-indigo-900/20 rounded-xl">
         <div class="text-sm">
           <strong>
             <i
-              class="bi bi-info-circle-fill inline w-4 h-4 mr-1 text-blue-600 dark:text-blue-400 align-[-2px]"
+              class="bi bi-info-circle-fill inline w-4 h-4 mr-1 text-indigo-600 dark:text-indigo-400 align-[-2px]"
               aria-hidden="true"
             ></i>
             Running:</strong
@@ -227,7 +227,7 @@
         </div>
       </div>
     {% elsif hydrationStatus contains 'Completed' %}
-      <div class="mb-4 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg text-sm">
+      <div class="mb-4 p-3 bg-green-50 dark:bg-green-900/20 rounded-xl text-sm">
         <strong>
           <i
             class="bi bi-check-circle-fill inline w-4 h-4 mr-1 text-green-600 dark:text-green-400 align-[-2px]"
@@ -263,7 +263,7 @@
         </button>
       </div>
       <div id="hydration-result" class="hidden">
-        <pre class="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg text-sm overflow-x-auto"></pre>
+        <pre class="bg-zinc-100 dark:bg-zinc-800 p-4 rounded-xl text-sm overflow-x-auto"></pre>
       </div>
     </div>
   </div>
@@ -275,7 +275,7 @@
       <div class="overflow-x-auto">
         <table class="w-full text-sm">
           <thead>
-            <tr class="border-b border-gray-200 dark:border-gray-700">
+            <tr class="border-b border-zinc-200 dark:border-zinc-800">
               <th class="text-left py-2">Pack Name</th>
               <th class="text-left py-2">Type</th>
               <th class="text-right py-2">Pack Size</th>
@@ -286,7 +286,7 @@
           </thead>
           <tbody>
             {% for packStat in state.packStats %}
-              <tr class="border-b border-gray-100 dark:border-gray-800">
+              <tr class="border-b border-zinc-100 dark:border-zinc-800">
                 <td class="py-2 font-mono text-xs">
                   {% assign packName = packStat.key | split: '/' | last %}
                   <span title="{{ packName }}">
@@ -297,7 +297,7 @@
                 <td class="py-2">
                   {% assign packName = packStat.key | split: '/' | last %}
                   {% if packName contains 'pack-hydr-' %}
-                    <span class="text-xs px-2 py-1 bg-blue-100 dark:bg-blue-900 rounded"
+                    <span class="text-xs px-2 py-1 bg-indigo-100 dark:bg-indigo-900 rounded"
                       >hydration</span
                     >
                   {% elsif packName contains 'pack-test-' %}
@@ -361,7 +361,7 @@
             {% endfor %}
             {% if packCount > state.packStats.size %}
               <tr>
-                <td colspan="6" class="py-2 text-gray-500 italic text-center">
+                <td colspan="6" class="py-2 text-zinc-500 italic text-center">
                   Showing first {{ state.packStats.size }} of {{ packCount }} packs
                 </td>
               </tr>
@@ -373,7 +373,7 @@
   {% elsif packCount > 0 %}
     <div class="card p-6">
       <h2 class="text-xl font-semibold mb-4">Pack Files</h2>
-      <p class="text-gray-600 dark:text-gray-400">
+      <p class="text-zinc-600 dark:text-zinc-400">
         {{ packCount }} pack files exist but size information not loaded
       </p>
     </div>
@@ -396,7 +396,7 @@
         <div class="overflow-x-auto">
           <table class="w-full text-sm">
             <thead>
-              <tr class="border-b border-gray-200 dark:border-gray-700">
+              <tr class="border-b border-zinc-200 dark:border-zinc-800">
                 <th class="text-left py-2">Reference Name</th>
                 <th class="text-left py-2">Target OID</th>
                 <th class="text-left py-2">Type</th>
@@ -404,16 +404,16 @@
             </thead>
             <tbody>
               {% for ref in refs %}
-                <tr class="border-b border-gray-100 dark:border-gray-800">
+                <tr class="border-b border-zinc-100 dark:border-zinc-800">
                   <td class="py-2 font-mono text-xs">
                     {{ ref.name | replace: 'refs/heads/', '' | replace: 'refs/tags/', '' }}
                   </td>
-                  <td class="py-2 font-mono text-xs text-gray-600 dark:text-gray-400">
+                  <td class="py-2 font-mono text-xs text-zinc-600 dark:text-zinc-400">
                     <span title="{{ ref.oid }}">{{ ref.oid | slice: 0, 12 }}...</span>
                   </td>
                   <td class="py-2">
                     {% if ref.name contains 'refs/heads/' %}
-                      <span class="text-xs px-2 py-1 bg-blue-100 dark:bg-blue-900 rounded"
+                      <span class="text-xs px-2 py-1 bg-indigo-100 dark:bg-indigo-900 rounded"
                         >branch</span
                       >
                     {% elsif ref.name contains 'refs/tags/' %}
@@ -421,7 +421,7 @@
                         >tag</span
                       >
                     {% else %}
-                      <span class="text-xs px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded">
+                      <span class="text-xs px-2 py-1 bg-zinc-100 dark:bg-zinc-800 rounded">
                         {{- ref.name | split: '/' | first -}}
                       </span>
                     {% endif %}
@@ -432,7 +432,7 @@
           </table>
         </div>
       {% else %}
-        <p class="text-gray-500 italic">No references found</p>
+        <p class="text-zinc-500 italic">No references found</p>
       {% endif %}
     </div>
   </div>
@@ -448,13 +448,13 @@
             type="text"
             id="debug-oid"
             placeholder="Enter 40-character SHA-1 hash"
-            class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 font-mono text-sm"
+            class="flex-1 px-3 py-2 border border-zinc-300 dark:border-zinc-700 rounded-xl bg-white dark:bg-zinc-800 focus:ring-2 focus:ring-indigo-500 font-mono text-sm"
             pattern="[a-f0-9]{40}"
           >
           <button class="btn" onclick="adminActions.checkOid()">Check OID</button>
         </div>
         <div id="oid-result" class="mt-2 hidden">
-          <pre class="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg text-sm overflow-x-auto"></pre>
+          <pre class="bg-zinc-100 dark:bg-zinc-800 p-4 rounded-xl text-sm overflow-x-auto"></pre>
         </div>
       </div>
 
@@ -468,7 +468,7 @@
           <span class="label">View DO State</span>
         </button>
         <div id="state-dump" class="mt-2 hidden">
-          <pre class="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg text-sm overflow-x-auto"></pre>
+          <pre class="bg-zinc-100 dark:bg-zinc-800 p-4 rounded-xl text-sm overflow-x-auto"></pre>
         </div>
       </div>
     </div>
@@ -488,7 +488,7 @@
         <strong>Warning:</strong> These actions cannot be undone. All repository data will be
         permanently deleted.
       </div>
-      <p class="text-sm text-gray-600 dark:text-gray-400">
+      <p class="text-sm text-zinc-600 dark:text-zinc-400">
         This will delete all objects, packs, references, and metadata associated with this
         repository. The repository will be removed from the owner's registry.
       </p>

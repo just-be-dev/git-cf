@@ -4,6 +4,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ title | default: 'git-on-cloudflare' }}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/dist/app.css">
     {% if needsMarkdown %}
       <!-- Markdown renderer + sanitizer (conditionally loaded) -->
@@ -195,63 +198,82 @@
       </script>
     {% endif %}
   </head>
-  <body class="min-h-full text-gray-900 dark:text-gray-100">
-    <div class="container py-4">
-      <header class="flex justify-between items-center mb-6 pb-4 border-b border-gray-300 dark:border-gray-700">
-        <nav class="flex items-center gap-4">
-          <a
-            href="/"
-            class="font-bold text-lg hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-            >git-on-cloudflare</a
-          >
-          <a
-            href="/auth"
-            class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
-            >Auth</a
-          >
-        </nav>
-        <div>
-          <button
-            id="theme-toggle"
-            class="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-100 px-2 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer"
-            onclick="__toggleTheme()"
-            aria-label="Toggle theme"
-          >
-            <!-- Light icon -->
-            <i class="bi bi-sun icon-light w-5 h-5" aria-hidden="true"></i>
-            <!-- Dark icon -->
-            <i class="bi bi-moon-stars icon-dark w-5 h-5 hidden" aria-hidden="true"></i>
-          </button>
+  <body class="min-h-screen text-zinc-900 dark:text-zinc-100">
+    <!-- Ambient glow background -->
+    <div class="ambient-glow" aria-hidden="true"></div>
+    <div class="relative z-10 min-h-screen flex flex-col">
+      <header class="sticky top-0 z-50 w-full border-b border-zinc-200/80 dark:border-zinc-800/60 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-xl">
+        <div class="container flex items-center justify-between gap-4 py-3">
+          <nav class="flex items-center gap-1" aria-label="Primary">
+            <a
+              href="/"
+              class="flex items-center gap-2.5 transition-opacity hover:opacity-80"
+            >
+              <span class="inline-grid h-8 w-8 place-items-center rounded-lg bg-indigo-600">
+                <i class="bi bi-git text-white" style="font-size: 1rem" aria-hidden="true"></i>
+              </span>
+              <span>
+                <strong class="block text-sm font-semibold text-zinc-900 dark:text-zinc-100">git-on-cloudflare</strong>
+                <small class="hidden sm:block text-xs text-zinc-500 dark:text-zinc-400">Git hosting on Cloudflare Workers</small>
+              </span>
+            </a>
+            <a
+              href="/auth"
+              class="ml-3 flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-800 dark:hover:text-zinc-200 transition-colors"
+            >
+              <i class="bi bi-shield-lock w-3.5 h-3.5" aria-hidden="true"></i>
+              Auth
+            </a>
+          </nav>
+          <div>
+            <button
+              id="theme-toggle"
+              class="flex items-center gap-2 text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-100 px-2.5 py-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
+              onclick="__toggleTheme()"
+              aria-label="Toggle theme"
+            >
+              <!-- Light icon -->
+              <i class="bi bi-sun icon-light w-5 h-5" aria-hidden="true"></i>
+              <!-- Dark icon -->
+              <i class="bi bi-moon-stars icon-dark w-5 h-5 hidden" aria-hidden="true"></i>
+            </button>
+          </div>
         </div>
       </header>
-      <main class="min-h-[calc(100vh-200px)]">
+      <main class="flex-1 container py-6 animate-fade-in">
         {% block -%}
         {%- endblock %}
       </main>
-      <footer class="mt-12 pt-8 pb-4 border-t border-gray-300 dark:border-gray-700">
-        <div class="text-center text-sm text-gray-600 dark:text-gray-400">
-          <p class="mb-2">
-            <i
-              class="bi bi-heart-fill inline w-4 h-4 mr-1 text-red-500 align-[-2px]"
-              aria-hidden="true"
-            ></i>
-            Made with Cloudflare
-          </p>
-          <div class="flex justify-center gap-6">
-            <a
-              href="https://github.com/zllovesuki/git-on-cloudflare"
-              class="hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
-            >
-              GitHub
-            </a>
-            <a
-              href="https://git-on-cloudflare.com/rachel/git-on-cloudflare"
-              class="hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
-            >
-              git-on-cloudflare
-            </a>
-          </div>
+      <footer class="mt-auto border-t border-zinc-200/80 dark:border-zinc-800/60 py-6 text-center text-xs text-zinc-500 dark:text-zinc-500">
+        <p class="flex items-center justify-center gap-1 mb-0">
+          Made with
+          <i
+            class="bi bi-heart inline w-3 h-3 text-indigo-500"
+            aria-hidden="true"
+          ></i>
+          on Cloudflare
+        </p>
+        <div class="mt-1 flex justify-center gap-4">
+          <a
+            href="https://github.com/zllovesuki/git-on-cloudflare"
+            class="text-zinc-500 underline decoration-zinc-300 dark:decoration-zinc-700 underline-offset-2 transition-colors hover:text-indigo-500 dark:hover:text-indigo-400"
+          >
+            GitHub
+          </a>
+          <a
+            href="https://git-on-cloudflare.com/rachel/git-on-cloudflare"
+            class="text-zinc-500 underline decoration-zinc-300 dark:decoration-zinc-700 underline-offset-2 transition-colors hover:text-indigo-500 dark:hover:text-indigo-400"
+          >
+            git-on-cloudflare
+          </a>
         </div>
+        <p class="mt-2">
+          Part of
+          <a
+            href="https://devbin.tools"
+            class="text-zinc-500 underline decoration-zinc-300 dark:decoration-zinc-700 underline-offset-2 transition-colors hover:text-indigo-500 dark:hover:text-indigo-400"
+          >devbin.tools</a>
+        </p>
       </footer>
     </div>
   </body>

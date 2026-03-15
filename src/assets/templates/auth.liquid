@@ -1,15 +1,19 @@
 {% layout 'layout' %}
 {% block %}
 <header class="page-header">
-  <h2 class="m-0">Auth Management</h2>
+  <div>
+    <span class="mb-1 inline-block text-xs font-semibold uppercase tracking-wider text-indigo-500 dark:text-indigo-400">Settings</span>
+    <h2 class="m-0">Auth Management</h2>
+  </div>
   <div></div>
 </header>
+<div class="animate-slide-up">
 <p class="muted mb-6">
   Use your root admin token to manage owners and tokens. Tokens are stored as SHA‑256 hashes. You
   can add and delete owners; individual token removal coming later.
 </p>
 
-<div id="message" class="hidden mb-4 p-4 rounded-lg" aria-live="polite" role="status"></div>
+<div id="message" class="hidden mb-4 p-4 rounded-xl" aria-live="polite" role="status"></div>
 
 <div class="grid gap-6 md:grid-cols-2 mb-6">
   <div class="card p-6">
@@ -19,7 +23,7 @@
         id="adm"
         type="password"
         placeholder="Enter AUTH_ADMIN_TOKEN"
-        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:outline-hidden focus:ring-2 focus:ring-blue-500"
+        class="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-700 rounded-xl bg-white dark:bg-zinc-800 focus:outline-hidden focus:ring-2 focus:ring-indigo-500"
       >
       <button class="btn w-full sm:w-auto" id="load">Load Users</button>
     </div>
@@ -33,12 +37,12 @@
       <input
         id="owner"
         placeholder="owner (e.g., rachel)"
-        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:outline-hidden focus:ring-2 focus:ring-blue-500"
+        class="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-700 rounded-xl bg-white dark:bg-zinc-800 focus:outline-hidden focus:ring-2 focus:ring-indigo-500"
       >
       <input
         id="token"
         placeholder="token (raw)"
-        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:outline-hidden focus:ring-2 focus:ring-blue-500"
+        class="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-700 rounded-xl bg-white dark:bg-zinc-800 focus:outline-hidden focus:ring-2 focus:ring-indigo-500"
       >
       <button class="btn w-full sm:w-auto" id="add">Add</button>
     </div>
@@ -52,18 +56,19 @@
 <div class="card p-6 mb-6">
   <div class="flex justify-between items-center mb-4">
     <h3>Owners</h3>
-    <span class="px-3 py-1 bg-gray-200 dark:bg-gray-700 text-sm rounded-full" id="owners-count"
+    <span class="px-3 py-1 bg-zinc-200 dark:bg-zinc-700 text-sm rounded-full" id="owners-count"
       >0 owners</span
     >
   </div>
-  <div id="users" class="text-gray-500 dark:text-gray-400">(none)</div>
+  <div id="users" class="text-zinc-500 dark:text-zinc-400">(none)</div>
 </div>
 
-<div class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-6">
+<div class="bg-indigo-50 dark:bg-indigo-900/20 rounded-2xl p-6">
   <h3 class="text-lg font-semibold mb-3">Usage examples</h3>
-  <ul class="space-y-2 text-gray-600 dark:text-gray-400">
+  <ul class="space-y-2 text-zinc-600 dark:text-zinc-400">
     <li>Git Basic auth: use <code>username = owner</code>, <code>password = token</code>.</li>
   </ul>
+</div>
 </div>
 <script>
   const el = (id) => document.getElementById(id);
@@ -71,10 +76,10 @@
     const msg = el('message');
     msg.textContent = text;
     msg.className = isError
-      ? 'block mb-4 p-4 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-200'
-      : 'block mb-4 p-4 rounded-lg bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-200';
+      ? 'block mb-4 p-4 rounded-xl bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-200'
+      : 'block mb-4 p-4 rounded-xl bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-200';
     setTimeout(() => {
-      msg.className = 'hidden mb-4 p-4 rounded-lg';
+      msg.className = 'hidden mb-4 p-4 rounded-xl';
     }, 4000);
   }
 
@@ -109,7 +114,7 @@
         const tokensHtml = (u.tokens || [])
           .map(function (h) {
             return (
-              '<span class="inline-flex items-center gap-1 px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded-sm mr-2">' +
+              '<span class="inline-flex items-center gap-1 px-2 py-1 bg-zinc-100 dark:bg-zinc-700 rounded-lg mr-2">' +
               '<code class="text-sm">' +
               String(h).slice(0, 8) +
               '…</code>' +
@@ -122,16 +127,16 @@
           })
           .join('');
         return (
-          '<div class="flex justify-between items-start p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">\
+          '<div class="flex justify-between items-start p-4 bg-white dark:bg-zinc-800 rounded-xl border border-zinc-200 dark:border-zinc-800/60">\
       <div>\
         <div class="font-semibold text-lg">' +
           u.owner +
           '</div>\
-        <div class="text-sm text-gray-500 dark:text-gray-400 mb-2">tokens: ' +
+        <div class="text-sm text-zinc-500 dark:text-zinc-400 mb-2">tokens: ' +
           (u.tokens ? u.tokens.length : 0) +
           '</div>\
         <div class="flex flex-wrap gap-2">' +
-          (tokensHtml || '<span class="text-gray-500 dark:text-gray-400">(no tokens)</span>') +
+          (tokensHtml || '<span class="text-zinc-500 dark:text-zinc-400">(no tokens)</span>') +
           '</div>\
       </div>\
       <div>\

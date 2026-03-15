@@ -1,6 +1,7 @@
 {% layout 'layout' %}
 {% block %}
 {% render 'repo_nav', owner: owner, repo: repo, refEnc: refEnc, currentTab: 'commits' %}
+<span class="mb-1 inline-block text-xs font-semibold uppercase tracking-wider text-indigo-500 dark:text-indigo-400">Commit Detail</span>
 <h2>Commit {{ commitShort }}</h2>
 <p>
   <strong>Author:</strong>

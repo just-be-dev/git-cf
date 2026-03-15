@@ -8,7 +8,7 @@
   - mergeOf (optional): OID of merge this row belongs to; used to collapse inserted rows
 {% endcomment %}
 <tr
-  class="{% if compact %}text-sm subrow bg-indigo-50/20 dark:bg-indigo-900/10 border-l-2 border-l-indigo-400 dark:border-l-indigo-700 border-b border-b-gray-200 dark:border-b-gray-700{% endif %}{% if rowClass %} {{ rowClass }}{% endif %}"
+  class="{% if compact %}text-sm subrow bg-indigo-50/20 dark:bg-indigo-900/10 border-l-2 border-l-indigo-400 dark:border-l-indigo-700 border-b border-b-zinc-200 dark:border-b-zinc-800{% endif %}{% if rowClass %} {{ rowClass }}{% endif %}"
   {% if mergeOf %}
     data-merge-of="{{ mergeOf }}"
   {% endif %}
