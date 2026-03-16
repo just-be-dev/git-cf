@@ -265,7 +265,9 @@ export async function handleCommit(request: RouteRequest, env: Env, ctx: Executi
     });
     const diff = await cacheOrLoadJSONWithTTL<CommitDiffResult>(
       diffCacheKey,
-      async () => await listCommitChangedFiles(env, repoId, oid, cacheCtx),
+      async () => await listCommitChangedFiles(env, repoId, oid, cacheCtx, {
+        timeBudgetMs: 5000,
+      }),
       () => 86400,
       ctx
     );
