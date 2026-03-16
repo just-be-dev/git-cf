@@ -8,6 +8,7 @@ export type RepoOverviewCardProps = {
   storageSize: string;
   packCount: number;
   hydrationPackCount: number;
+  hydrationStatus: string;
   nextMaintenanceIn?: string;
   nextMaintenanceAt?: string;
   state: AdminState;
@@ -20,6 +21,7 @@ export function RepoOverviewCard({
   storageSize,
   packCount,
   hydrationPackCount,
+  hydrationStatus,
   nextMaintenanceIn,
   nextMaintenanceAt,
   state,
@@ -133,9 +135,7 @@ export function RepoOverviewCard({
             Hydration
           </div>
           <div className="font-mono text-sm text-indigo-600 dark:text-indigo-400">
-            {/* status string is missing from this card, it was in the parent component.
-                Let's add it as a prop or assume it. Let's add hydrationStatus as a prop.
-            */}
+            {hydrationStatus}
           </div>
         </div>
         <div>

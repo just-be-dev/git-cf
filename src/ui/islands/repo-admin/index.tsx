@@ -67,6 +67,7 @@ export function RepoAdminIsland(props: RepoAdminProps) {
         storageSize={storageSize}
         packCount={packCount}
         hydrationPackCount={hydrationPackCount}
+        hydrationStatus={hydrationStatus}
         nextMaintenanceIn={nextMaintenanceIn}
         nextMaintenanceAt={nextMaintenanceAt}
         state={state}
