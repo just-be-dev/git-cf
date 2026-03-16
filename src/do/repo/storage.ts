@@ -11,7 +11,7 @@ import type { RepoStateSchema } from "./repoState.ts";
 
 import { asTypedStorage, objKey } from "./repoState.ts";
 import { r2LooseKey } from "@/keys.ts";
-import { isValidOid, createInflateStream, createBlobFromBytes } from "@/common/index.ts";
+import { isValidOid } from "@/common/index.ts";
 import {
   inflateAndParseHeader,
   parseCommitRefs,
@@ -386,20 +386,10 @@ export async function readCommitFromStore(
 
   const z = data instanceof ArrayBuffer ? new Uint8Array(data) : data;
   // Decompress (zlib/deflate) and parse git header
-  const ds = createInflateStream();
-  const stream = createBlobFromBytes(z).stream().pipeThrough(ds);
-  const raw = new Uint8Array(await new Response(stream).arrayBuffer());
-  // header: <type> <len>\0
-  let p = 0;
-  let sp = p;
-  while (sp < raw.length && raw[sp] !== 0x20) sp++;
-  const type = new TextDecoder().decode(raw.subarray(p, sp));
-  if (type !== "commit") return null;
-  let nul = sp + 1;
-  while (nul < raw.length && raw[nul] !== 0x00) nul++;
-  const payload = raw.subarray(nul + 1);
-  const text = new TextDecoder().decode(payload);
+  const parsed = await inflateAndParseHeader(z);
+  if (!parsed || parsed.type !== "commit") return null;
+  const text = new TextDecoder().decode(parsed.payload);
 
-  const parsed = parseCommitText(text);
-  return { oid, ...parsed };
+  const commit = parseCommitText(text);
+  return { oid, ...commit };
 }

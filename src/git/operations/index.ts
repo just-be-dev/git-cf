@@ -3,8 +3,7 @@
  */
 
 export * from "./types.ts";
-export * from "./read.ts";
+export * from "./read/index.ts";
 export * from "./receive.ts";
-export * from "./upload.ts";
-export * from "./uploadStream.ts";
+export * from "./uploadStream/index.ts";
 export * from "./args.ts";

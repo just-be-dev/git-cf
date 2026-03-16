@@ -1,6 +1,7 @@
 import { AutoRouter } from "itty-router";
 import { renderUiView } from "@/ui/server/render";
 import { getAuthStub, getBearerToken, unauthorizedBearer, tooManyAttempts, json } from "@/common";
+import { isJsonObject, safeParseJsonRequest } from "@/web";
 
 export function registerAuthRoutes(router: ReturnType<typeof AutoRouter>) {
   // Auth UI page
@@ -54,12 +55,16 @@ export function registerAuthRoutes(router: ReturnType<typeof AutoRouter>) {
       if (auth.status === 429) return tooManyAttempts(auth.retryAfter);
       return unauthorizedBearer();
     }
-    const input = await request.json<any>().catch(() => ({}));
-    const owner = String(input.owner || "").trim();
-    const token: string | undefined = input.token ? String(input.token) : undefined;
-    const tokens: string[] | undefined = Array.isArray(input.tokens)
-      ? input.tokens.map(String)
-      : undefined;
+    const input = await safeParseJsonRequest(request);
+    const owner = isJsonObject(input) && typeof input.owner === "string" ? input.owner.trim() : "";
+    const token =
+      isJsonObject(input) && typeof input.token === "string" && input.token
+        ? input.token
+        : undefined;
+    const tokens =
+      isJsonObject(input) && Array.isArray(input.tokens)
+        ? input.tokens.filter((value): value is string => typeof value === "string")
+        : undefined;
     if (!owner || (!token && !tokens)) {
       return json({ error: "owner and token(s) required" }, 400);
     }
@@ -82,10 +87,16 @@ export function registerAuthRoutes(router: ReturnType<typeof AutoRouter>) {
       if (auth.status === 429) return tooManyAttempts(auth.retryAfter);
       return unauthorizedBearer();
     }
-    const input = await request.json<any>().catch(() => ({}));
-    const owner = String(input.owner || "").trim();
-    const token: string | undefined = input.token ? String(input.token) : undefined;
-    const tokenHash: string | undefined = input.tokenHash ? String(input.tokenHash) : undefined;
+    const input = await safeParseJsonRequest(request);
+    const owner = isJsonObject(input) && typeof input.owner === "string" ? input.owner.trim() : "";
+    const token =
+      isJsonObject(input) && typeof input.token === "string" && input.token
+        ? input.token
+        : undefined;
+    const tokenHash =
+      isJsonObject(input) && typeof input.tokenHash === "string" && input.tokenHash
+        ? input.tokenHash
+        : undefined;
     if (!owner) {
       return json({ error: "owner required" }, 400);
     }

@@ -1,5 +1,6 @@
 import test from "ava";
-import { decodePktLines, respondWithPackfile } from "@/git/index.ts";
+import { decodePktLines } from "@/git/index.ts";
+import { respondWithPacketizedPack } from "@/git/operations/fetch/protocol.ts";
 
 async function getBytes(r: Response): Promise<Uint8Array> {
   const ab = await r.arrayBuffer();
@@ -12,7 +13,7 @@ function findLine(items: ReturnType<typeof decodePktLines>, text: string): numbe
 
 test("respondWithPackfile emits NAK when no common haves and done=false", async (t) => {
   const fakePack = new Uint8Array([0x50, 0x41, 0x43, 0x4b]); // arbitrary bytes
-  const resp = respondWithPackfile(fakePack, /*done=*/ false, /*ackOids=*/ []);
+  const resp = respondWithPacketizedPack(fakePack, /*done=*/ false, /*ackOids=*/ []);
   t.is(resp.status, 200);
   const bytes = await getBytes(resp);
   const items = decodePktLines(bytes);
@@ -34,7 +35,7 @@ test("respondWithPackfile emits ACK <oid> common... and last ACK ready", async (
   const fakePack = new Uint8Array([0xaa]);
   const o1 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
   const o2 = "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
-  const resp = respondWithPackfile(fakePack, /*done=*/ false, /*ackOids=*/ [o1, o2]);
+  const resp = respondWithPacketizedPack(fakePack, /*done=*/ false, /*ackOids=*/ [o1, o2]);
   const items = decodePktLines(await getBytes(resp));
 
   const iAck = findLine(items, "acknowledgments\n");
@@ -46,7 +47,7 @@ test("respondWithPackfile emits ACK <oid> common... and last ACK ready", async (
 
 test("respondWithPackfile omits acknowledgments when done=true", async (t) => {
   const fakePack = new Uint8Array([0xff, 0x00]);
-  const resp = respondWithPackfile(fakePack, /*done=*/ true, /*ackOids=*/ []);
+  const resp = respondWithPacketizedPack(fakePack, /*done=*/ true, /*ackOids=*/ []);
   const items = decodePktLines(await getBytes(resp));
   // First meaningful line should be packfile
   const iPack = findLine(items, "packfile\n");

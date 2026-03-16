@@ -4,7 +4,7 @@ import type { RepoDurableObject } from "@/index.ts";
 import { createLogger } from "@/common/index.ts";
 import { getRepoStub } from "@/common/index.ts";
 import { getLimiter, countSubrequest } from "./limits.ts";
-import { readLooseObjectRaw } from "./read.ts";
+import { readLooseObjectRaw } from "./read/index.ts";
 import { parseCommitRefs } from "@/git/core/index.ts";
 
 /**

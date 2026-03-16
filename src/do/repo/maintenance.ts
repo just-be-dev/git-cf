@@ -18,7 +18,7 @@ import {
 import { r2PackDirPrefix, isPackKey, packIndexKey, doPrefix } from "@/keys.ts";
 import { ensureScheduled } from "./scheduler.ts";
 import { getConfig } from "./repoConfig.ts";
-import { enqueueHydrationTask } from "./hydration.ts";
+import { enqueueHydrationTask } from "./hydration/index.ts";
 import { calculateStableEpochs } from "./packs.ts";
 
 /**

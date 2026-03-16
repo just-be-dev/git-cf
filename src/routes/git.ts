@@ -4,7 +4,6 @@ import { AutoRouter } from "itty-router";
 import {
   capabilityAdvertisement,
   parseV2Command,
-  handleFetchV2,
   pktLine,
   flushPkt,
   concatChunks,
@@ -12,8 +11,8 @@ import {
   inflateAndParseHeader,
   parseTagTarget,
 } from "@/git";
-import { handleFetchV2Streaming } from "@/git/operations/uploadStream.ts";
-import { asBodyInit, getRepoStub } from "@/common";
+import { handleFetchV2Streaming } from "@/git/operations/uploadStream/index.ts";
+import { asBodyInit, getRepoStub, unauthorizedBasic } from "@/common";
 import { repoKey } from "@/keys";
 import { verifyAuth } from "@/auth";
 import { addRepoToOwner, removeRepoFromOwner } from "@/registry";
@@ -146,16 +145,8 @@ async function handleUploadPackPOST(
   }
 
   if (command === "fetch") {
-    // Use streaming by default, allow opt-out with X-Git-Streaming: false
-    // The buffered implementation is deprecated and will be removed in a future version
-    const forceBuffered = request.headers.get("X-Git-Streaming") === "false";
-
-    if (forceBuffered) {
-      // Deprecated: buffered mode is only kept for emergency fallback
-      return handleFetchV2(env, repoId, body, request.signal, { req: request, ctx });
-    } else {
-      return handleFetchV2Streaming(env, repoId, body, request.signal, { req: request, ctx });
-    }
+    // We strictly use streaming fetch
+    return handleFetchV2Streaming(env, repoId, body, request.signal, { req: request, ctx });
   }
 
   return new Response("Unsupported command or malformed request\n", { status: 400 });
@@ -241,10 +232,7 @@ export function registerGitRoutes(router: ReturnType<typeof AutoRouter>) {
   router.post(`/:owner/:repo/git-receive-pack`, async (request, env: Env) => {
     const { owner, repo } = request.params;
     if (!(await verifyAuth(env, owner, request, false))) {
-      return new Response("Unauthorized\n", {
-        status: 401,
-        headers: { "WWW-Authenticate": 'Basic realm="Git", charset="UTF-8"' },
-      });
+      return unauthorizedBasic();
     }
     return handleReceivePackPOST(env, repoKey(owner, repo), request);
   });

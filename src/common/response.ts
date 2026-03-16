@@ -34,6 +34,22 @@ export function unauthorizedBearer(headers: HeadersInit = {}): Response {
 }
 
 /**
+ * 401 Unauthorized response with WWW-Authenticate: Basic
+ */
+export function unauthorizedBasic(realm = "Git"): Response {
+  return text("Unauthorized\n", 401, {
+    "WWW-Authenticate": `Basic realm="${realm}", charset="UTF-8"`,
+  });
+}
+
+/**
+ * 401 Unauthorized response for Admin UI Routes
+ */
+export function unauthorizedAdminBasic(): Response {
+  return unauthorizedBasic("Git Admin");
+}
+
+/**
  * 429 Too Many Attempts response with optional Retry-After seconds header.
  */
 export function tooManyAttempts(retryAfterSeconds?: number, headers: HeadersInit = {}): Response {

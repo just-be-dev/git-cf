@@ -6,4 +6,5 @@ export * from "./format.ts";
 export * from "./syntax.ts";
 export * from "./validation.ts";
 export * from "./http.ts";
+export * from "./json.ts";
 export * from "./mime.ts";

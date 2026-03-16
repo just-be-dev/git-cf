@@ -13,7 +13,7 @@ import { getDb, getPackOidsSlice, getPackObjectCount } from "./db/index.ts";
 import { unpackOidsChunkFromPackBytes } from "@/git/index.ts";
 import { scheduleAlarmIfSooner, ensureScheduled } from "./scheduler.ts";
 import { getConfig } from "./repoConfig.ts";
-import { enqueueHydrationTask } from "./hydration.ts";
+import { enqueueHydrationTask } from "./hydration/index.ts";
 
 /**
  * Get current unpack progress

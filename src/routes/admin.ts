@@ -1,18 +1,40 @@
 import { AutoRouter } from "itty-router";
-import { getRepoStub, isValidOid, json } from "@/common";
+import { getRepoStub, isValidOid, json, unauthorizedAdminBasic } from "@/common";
 import { repoKey } from "@/keys";
 import { verifyAuth } from "@/auth";
 import { listReposForOwner, addRepoToOwner, removeRepoFromOwner } from "@/registry";
+import { isJsonObject, safeParseJsonRequest, type JsonValue } from "@/web";
+
+type RefPayload = {
+  name: string;
+  oid: string;
+};
+
+type HeadPayload = {
+  target: string;
+  oid?: string;
+  unborn?: boolean;
+};
+
+function isRefPayload(value: JsonValue): value is RefPayload {
+  return isJsonObject(value) && typeof value.name === "string" && typeof value.oid === "string";
+}
+
+function isHeadPayload(value: JsonValue | null): value is HeadPayload {
+  return (
+    isJsonObject(value) &&
+    typeof value.target === "string" &&
+    (value.oid === undefined || typeof value.oid === "string") &&
+    (value.unborn === undefined || typeof value.unborn === "boolean")
+  );
+}
 
 export function registerAdminRoutes(router: ReturnType<typeof AutoRouter>) {
   // Owner registry: list current repos from KV
   router.get(`/:owner/admin/registry`, async (request, env: Env) => {
     const { owner } = request.params;
     if (!(await verifyAuth(env, owner, request, true))) {
-      return new Response("Unauthorized\n", {
-        status: 401,
-        headers: { "WWW-Authenticate": 'Basic realm="Git", charset="UTF-8"' },
-      });
+      return unauthorizedAdminBasic();
     }
     const repos = await listReposForOwner(env, owner);
     return json({ owner, repos });
@@ -22,10 +44,7 @@ export function registerAdminRoutes(router: ReturnType<typeof AutoRouter>) {
   router.delete(`/:owner/:repo/admin/hydrate`, async (request, env: Env) => {
     const { owner, repo } = request.params as { owner: string; repo: string };
     if (!(await verifyAuth(env, owner, request, true))) {
-      return new Response("Unauthorized\n", {
-        status: 401,
-        headers: { "WWW-Authenticate": 'Basic realm="Git", charset="UTF-8"' },
-      });
+      return unauthorizedAdminBasic();
     }
     const stub = getRepoStub(env, repoKey(owner, repo));
     try {
@@ -41,16 +60,10 @@ export function registerAdminRoutes(router: ReturnType<typeof AutoRouter>) {
   router.post(`/:owner/:repo/admin/hydrate`, async (request, env: Env) => {
     const { owner, repo } = request.params as { owner: string; repo: string };
     if (!(await verifyAuth(env, owner, request, true))) {
-      return new Response("Unauthorized\n", {
-        status: 401,
-        headers: { "WWW-Authenticate": 'Basic realm="Git", charset="UTF-8"' },
-      });
+      return unauthorizedAdminBasic();
     }
-    let body: { dryRun?: boolean } = {};
-    try {
-      body = await (request as Request).json();
-    } catch {}
-    const dryRun = body?.dryRun !== false; // default to true
+    const body = await safeParseJsonRequest(request);
+    const dryRun = !isJsonObject(body) || body.dryRun !== false;
     const stub = getRepoStub(env, repoKey(owner, repo));
     try {
       const res = await stub.startHydration({ dryRun });
@@ -65,16 +78,13 @@ export function registerAdminRoutes(router: ReturnType<typeof AutoRouter>) {
   router.post(`/:owner/admin/registry/sync`, async (request, env: Env) => {
     const { owner } = request.params as { owner: string };
     if (!(await verifyAuth(env, owner, request, true))) {
-      return new Response("Unauthorized\n", {
-        status: 401,
-        headers: { "WWW-Authenticate": 'Basic realm="Git", charset="UTF-8"' },
-      });
+      return unauthorizedAdminBasic();
     }
-    let input: { repos?: string[] } = {};
-    try {
-      input = await request.json();
-    } catch {}
-    let targets = input?.repos?.filter(Boolean) || [];
+    const input = await safeParseJsonRequest(request);
+    let targets =
+      isJsonObject(input) && Array.isArray(input.repos)
+        ? input.repos.filter((repo): repo is string => typeof repo === "string" && repo.length > 0)
+        : [];
     if (targets.length === 0) {
       // revalidate existing KV entries only
       targets = await listReposForOwner(env, owner);
@@ -107,10 +117,7 @@ export function registerAdminRoutes(router: ReturnType<typeof AutoRouter>) {
   router.get(`/:owner/:repo/admin/refs`, async (request, env: Env) => {
     const { owner, repo } = request.params;
     if (!(await verifyAuth(env, owner, request, true))) {
-      return new Response("Unauthorized\n", {
-        status: 401,
-        headers: { "WWW-Authenticate": 'Basic realm="Git", charset="UTF-8"' },
-      });
+      return unauthorizedAdminBasic();
     }
     const stub = getRepoStub(env, repoKey(owner, repo));
     try {
@@ -124,30 +131,26 @@ export function registerAdminRoutes(router: ReturnType<typeof AutoRouter>) {
   router.put(`/:owner/:repo/admin/refs`, async (request, env: Env) => {
     const { owner, repo } = request.params;
     if (!(await verifyAuth(env, owner, request, true))) {
-      return new Response("Unauthorized\n", {
-        status: 401,
-        headers: { "WWW-Authenticate": 'Basic realm="Git", charset="UTF-8"' },
-      });
+      return unauthorizedAdminBasic();
     }
     const stub = getRepoStub(env, repoKey(owner, repo));
-    const body = await request.text();
-    try {
-      const refs = JSON.parse(body);
-      await stub.setRefs(refs);
-      return new Response("OK\n");
-    } catch {
+    const body = await safeParseJsonRequest(request);
+    if (!Array.isArray(body)) {
       return new Response("Invalid refs payload\n", { status: 400 });
     }
+    const refs = body.filter(isRefPayload);
+    if (refs.length !== body.length) {
+      return new Response("Invalid refs payload\n", { status: 400 });
+    }
+    await stub.setRefs(refs);
+    return new Response("OK\n");
   });
 
   // Admin head
   router.get(`/:owner/:repo/admin/head`, async (request, env: Env) => {
     const { owner, repo } = request.params;
     if (!(await verifyAuth(env, owner, request, true))) {
-      return new Response("Unauthorized\n", {
-        status: 401,
-        headers: { "WWW-Authenticate": 'Basic realm="Git", charset="UTF-8"' },
-      });
+      return unauthorizedAdminBasic();
     }
     const stub = getRepoStub(env, repoKey(owner, repo));
     try {
@@ -161,30 +164,22 @@ export function registerAdminRoutes(router: ReturnType<typeof AutoRouter>) {
   router.put(`/:owner/:repo/admin/head`, async (request, env: Env) => {
     const { owner, repo } = request.params;
     if (!(await verifyAuth(env, owner, request, true))) {
-      return new Response("Unauthorized\n", {
-        status: 401,
-        headers: { "WWW-Authenticate": 'Basic realm="Git", charset="UTF-8"' },
-      });
+      return unauthorizedAdminBasic();
     }
     const stub = getRepoStub(env, repoKey(owner, repo));
-    const body = await (request as Request).text();
-    try {
-      const head = JSON.parse(body);
-      await stub.setHead(head);
-      return new Response("OK\n");
-    } catch {
+    const body = await safeParseJsonRequest(request);
+    if (!isHeadPayload(body)) {
       return new Response("Invalid head payload\n", { status: 400 });
     }
+    await stub.setHead(body);
+    return new Response("OK\n");
   });
 
   // Debug: dump DO state (JSON)
   router.get(`/:owner/:repo/admin/debug-state`, async (request, env: Env) => {
     const { owner, repo } = request.params as { owner: string; repo: string };
     if (!(await verifyAuth(env, owner, request, true))) {
-      return new Response("Unauthorized\n", {
-        status: 401,
-        headers: { "WWW-Authenticate": 'Basic realm="Git", charset="UTF-8"' },
-      });
+      return unauthorizedAdminBasic();
     }
     const stub = getRepoStub(env, repoKey(owner, repo));
     try {
@@ -203,10 +198,7 @@ export function registerAdminRoutes(router: ReturnType<typeof AutoRouter>) {
       commit: string;
     };
     if (!(await verifyAuth(env, owner, request, true))) {
-      return new Response("Unauthorized\n", {
-        status: 401,
-        headers: { "WWW-Authenticate": 'Basic realm="Git", charset="UTF-8"' },
-      });
+      return unauthorizedAdminBasic();
     }
     if (!isValidOid(commit)) {
       return new Response("Invalid commit\n", { status: 400 });
@@ -228,10 +220,7 @@ export function registerAdminRoutes(router: ReturnType<typeof AutoRouter>) {
       oid: string;
     };
     if (!(await verifyAuth(env, owner, request, true))) {
-      return new Response("Unauthorized\n", {
-        status: 401,
-        headers: { "WWW-Authenticate": 'Basic realm="Git", charset="UTF-8"' },
-      });
+      return unauthorizedAdminBasic();
     }
     if (!isValidOid(oid)) {
       return new Response("Invalid OID\n", { status: 400 });
@@ -253,10 +242,7 @@ export function registerAdminRoutes(router: ReturnType<typeof AutoRouter>) {
       packKey: string;
     };
     if (!(await verifyAuth(env, owner, request, true))) {
-      return new Response("Unauthorized\n", {
-        status: 401,
-        headers: { "WWW-Authenticate": 'Basic realm="Git", charset="UTF-8"' },
-      });
+      return unauthorizedAdminBasic();
     }
 
     if (!packKey) {
@@ -276,15 +262,13 @@ export function registerAdminRoutes(router: ReturnType<typeof AutoRouter>) {
   router.delete(`/:owner/:repo/admin/purge`, async (request, env: Env) => {
     const { owner, repo } = request.params as { owner: string; repo: string };
     if (!(await verifyAuth(env, owner, request, true))) {
-      return new Response("Unauthorized\n", {
-        status: 401,
-        headers: { "WWW-Authenticate": 'Basic realm="Git", charset="UTF-8"' },
-      });
+      return unauthorizedAdminBasic();
     }
 
     // Require explicit confirmation
-    const body: any = await request.json().catch(() => ({}));
-    if (body.confirm !== `purge-${owner}/${repo}`) {
+    const body = await safeParseJsonRequest(request);
+    const confirm = isJsonObject(body) && typeof body.confirm === "string" ? body.confirm : "";
+    if (confirm !== `purge-${owner}/${repo}`) {
       return json(
         {
           error: "Confirmation required",

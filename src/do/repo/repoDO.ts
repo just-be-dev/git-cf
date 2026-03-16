@@ -11,6 +11,7 @@ import {
   buildPackV2,
   parseGitObject,
   indexPackOnly,
+  inflateAndParseHeader,
 } from "@/git/index.ts";
 import {
   text,
@@ -26,7 +27,7 @@ import {
   processHydrationSlice,
   summarizeHydrationPlan,
   clearHydrationState,
-} from "./hydration.ts";
+} from "./hydration/index.ts";
 import { ensureScheduled, scheduleAlarmIfSooner } from "./scheduler.ts";
 import { getConfig } from "./repoConfig.ts";
 import { purgeRepo, removePack } from "./packOperations.ts";
@@ -387,13 +388,10 @@ export class RepoDurableObject extends DurableObject {
       // This ensures streaming fetch operations will work correctly
 
       // First, decompress the objects to get their raw payloads
-      const treeStream = createBlobFromBytes(treeZ).stream().pipeThrough(createInflateStream());
-      const treeRaw = new Uint8Array(await new Response(treeStream).arrayBuffer());
-      const treeParsed = parseGitObject(treeRaw);
+      const treeParsed = await inflateAndParseHeader(treeZ);
+      const commitParsed = await inflateAndParseHeader(commitZ);
 
-      const commitStream = createBlobFromBytes(commitZ).stream().pipeThrough(createInflateStream());
-      const commitRaw = new Uint8Array(await new Response(commitStream).arrayBuffer());
-      const commitParsed = parseGitObject(commitRaw);
+      if (!treeParsed || !commitParsed) throw new Error("Failed to parse minimal repo objects");
 
       // Build a pack file with these objects
       const packData = await buildPackV2([
