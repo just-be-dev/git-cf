@@ -1,5 +1,7 @@
+import type { FileIconName } from "@/web";
 import { Breadcrumbs } from "@/ui/components/Breadcrumbs";
 import { EmptyState } from "@/ui/components/EmptyState";
+import { FileIcon } from "@/ui/components/FileIcon";
 import { type Progress, ProgressBanner } from "@/ui/components/ProgressBanner";
 import { RepoNav } from "@/ui/components/RepoNav";
 
@@ -7,7 +9,7 @@ type TreeEntry = {
   name: string;
   href: string;
   isDir: boolean;
-  iconClass: string;
+  iconName: FileIconName;
   shortOid: string;
 };
 
@@ -57,10 +59,10 @@ export function TreePage({
               entries.map((entry) => (
                 <tr key={`${entry.href}-${entry.name}`}>
                   <td>
-                    <i
-                      className={`${entry.iconClass} mr-1.5 inline-block align-[-2px] ${entry.isDir ? "text-amber-600 dark:text-amber-400" : "text-zinc-500 dark:text-zinc-400"}`}
-                      aria-hidden="true"
-                    ></i>{" "}
+                    <FileIcon
+                      name={entry.iconName}
+                      className={`mr-1.5 inline-block h-4 w-4 align-[-2px] ${entry.isDir ? "text-amber-600 dark:text-amber-400" : "text-zinc-500 dark:text-zinc-400"}`}
+                    />{" "}
                     <a href={entry.href}>{entry.name}</a>
                   </td>
                   <td className="muted">{entry.shortOid}</td>
@@ -69,7 +71,15 @@ export function TreePage({
             ) : (
               <tr>
                 <td colSpan={2}>
-                  <EmptyState iconClass="bi bi-folder" title="This tree is empty" />
+                  <EmptyState
+                    icon={
+                      <FileIcon
+                        name="folder"
+                        className="h-5 w-5 text-zinc-400 dark:text-zinc-600"
+                      />
+                    }
+                    title="This tree is empty"
+                  />
                 </td>
               </tr>
             )}

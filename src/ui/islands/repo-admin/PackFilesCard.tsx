@@ -1,3 +1,4 @@
+import { Check, Trash2, X } from "lucide-react";
 import { formatSampleBytes, shortValue } from "./format";
 import type { PackStat } from "./types";
 
@@ -77,15 +78,15 @@ export function PackFilesCard({ packCount, packStats, pending, removePack }: Pac
                   </td>
                   <td className="py-2 text-center">
                     {packStat.hasIndex ? (
-                      <i
-                        className="bi bi-check-circle-fill inline h-4 w-4 text-green-600 dark:text-green-400"
+                      <Check
+                        className="inline h-4 w-4 text-green-600 dark:text-green-400"
                         aria-hidden="true"
-                      ></i>
+                      />
                     ) : (
-                      <i
-                        className="bi bi-x-circle inline h-4 w-4 text-red-600 dark:text-red-400"
+                      <X
+                        className="inline h-4 w-4 text-red-600 dark:text-red-400"
                         aria-hidden="true"
-                      ></i>
+                      />
                     )}
                   </td>
                   <td className="py-2 text-center">
@@ -97,7 +98,7 @@ export function PackFilesCard({ packCount, packStats, pending, removePack }: Pac
                       onClick={() => void removePack(packName)}
                       disabled={pending[`remove-pack:${packName}`]}
                     >
-                      <i className="bi bi-trash3" style={{ width: "16px", height: "16px" }}></i>
+                      <Trash2 className="h-4 w-4" aria-hidden="true" />
                     </button>
                   </td>
                 </tr>

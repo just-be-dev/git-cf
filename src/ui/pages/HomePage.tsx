@@ -1,3 +1,5 @@
+import { Rocket } from "lucide-react";
+
 export function HomePage() {
   return (
     <div className="animate-slide-up space-y-6">
@@ -16,10 +18,7 @@ export function HomePage() {
             Quick Start
           </span>
           <h3 className="flex items-center gap-2">
-            <i
-              className="bi bi-rocket-takeoff inline h-4 w-4 text-indigo-500"
-              aria-hidden="true"
-            ></i>
+            <Rocket className="inline h-4 w-4 text-indigo-500" aria-hidden="true" />
             Get Started
           </h3>
           <ul className="list space-y-2">

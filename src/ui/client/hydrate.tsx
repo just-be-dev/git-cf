@@ -22,12 +22,24 @@ export function hydrateIsland<P>(name: string, Component: ComponentType<P>) {
   const hosts = document.querySelectorAll<HTMLElement>(`[data-island="${name}"]`);
 
   for (const host of Array.from(hosts)) {
+    if (host.dataset.islandHydrated === "true") {
+      continue;
+    }
+
     const root = host.querySelector<HTMLElement>("[data-island-root]");
     const props = readProps<P>(host);
     if (!root || !props) {
       continue;
     }
 
-    hydrateRoot(root, <Component {...props} />);
+    hydrateRoot(root, <Component {...props} />, {
+      onRecoverableError(error, errorInfo) {
+        console.error(`Recoverable hydration error in island "${name}"`, {
+          error,
+          componentStack: errorInfo.componentStack,
+        });
+      },
+    });
+    host.dataset.islandHydrated = "true";
   }
 }

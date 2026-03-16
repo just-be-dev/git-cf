@@ -1,6 +1,7 @@
 /// <reference lib="dom" />
 
 import { useEffect, useState } from "react";
+import { Moon, Sun } from "lucide-react";
 
 import { highlightThemeHref } from "@/ui/highlight-theme";
 import { hydrateIsland } from "@/ui/client/hydrate";
@@ -46,8 +47,8 @@ export function ThemeToggleIsland(_props: ThemeToggleProps) {
         } catch {}
       }}
     >
-      <i className="bi bi-sun icon-light h-5 w-5" aria-hidden="true"></i>
-      <i className="bi bi-moon-stars icon-dark h-5 w-5" aria-hidden="true"></i>
+      <Sun className="icon-light h-5 w-5" aria-hidden="true" />
+      <Moon className="icon-dark h-5 w-5" aria-hidden="true" />
     </button>
   );
 }

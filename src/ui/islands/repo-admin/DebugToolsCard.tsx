@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Database } from "lucide-react";
 import { JsonResult } from "./JsonResult";
 
 export type DebugToolsCardProps = {
@@ -56,10 +57,7 @@ export function DebugToolsCard({
             onClick={() => void dumpState()}
             disabled={pending["dump-state"]}
           >
-            <i
-              className="bi bi-bar-chart-fill mr-2 inline h-4 w-4 align-[-2px]"
-              aria-hidden="true"
-            ></i>
+            <Database className="mr-2 inline h-4 w-4 align-[-2px]" aria-hidden="true" />
             <span className="label">
               {pending["dump-state"] ? "Processing..." : "View DO State"}
             </span>

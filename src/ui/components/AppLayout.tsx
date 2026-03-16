@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { GitBranch, Heart, Shield } from "lucide-react";
 
 import { IslandHost } from "@/ui/server/IslandHost";
 import { ThemeToggleIsland } from "@/ui/islands/theme-toggle";
@@ -17,11 +18,7 @@ export function AppLayout({ children }: AppLayoutProps) {
             <nav className="flex items-center gap-1" aria-label="Primary">
               <a href="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-80">
                 <span className="inline-grid h-8 w-8 place-items-center rounded-lg bg-indigo-600">
-                  <i
-                    className="bi bi-git text-white"
-                    style={{ fontSize: "1rem" }}
-                    aria-hidden="true"
-                  ></i>
+                  <GitBranch className="h-4 w-4 text-white" aria-hidden="true" />
                 </span>
                 <span>
                   <strong className="block text-sm font-semibold text-zinc-900 dark:text-zinc-100">
@@ -36,7 +33,7 @@ export function AppLayout({ children }: AppLayoutProps) {
                 href="/auth"
                 className="ml-3 flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-200"
               >
-                <i className="bi bi-shield-lock w-3.5 h-3.5" aria-hidden="true"></i>
+                <Shield className="h-3.5 w-3.5" aria-hidden="true" />
                 Auth
               </a>
             </nav>
@@ -49,7 +46,7 @@ export function AppLayout({ children }: AppLayoutProps) {
         <footer className="mt-auto border-t border-zinc-200/80 py-6 text-center text-xs text-zinc-500 dark:border-zinc-800/60 dark:text-zinc-500">
           <p className="mb-0 flex items-center justify-center gap-1">
             Made with
-            <i className="bi bi-heart inline h-3 w-3 text-indigo-500" aria-hidden="true"></i>
+            <Heart className="inline h-3 w-3 text-indigo-500" aria-hidden="true" />
             on Cloudflare
           </p>
           <div className="mt-1 flex justify-center gap-4">

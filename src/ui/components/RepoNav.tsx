@@ -1,3 +1,4 @@
+import { Settings } from "lucide-react";
 import { IslandHost } from "@/ui/server/IslandHost";
 import { RefPickerIsland } from "@/ui/islands/ref-picker";
 
@@ -63,7 +64,7 @@ export function RepoNav({ owner, repo, refEnc, currentTab, showRefDropdown = tru
                 className="tab"
                 aria-current={currentTab === "admin" ? "page" : undefined}
               >
-                <i className="bi bi-gear-fill h-4 w-4" aria-hidden="true"></i>
+                <Settings className="h-4 w-4" aria-hidden="true" />
                 <span>Admin</span>
               </a>
             </div>

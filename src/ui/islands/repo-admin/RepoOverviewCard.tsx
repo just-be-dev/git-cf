@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Clipboard } from "lucide-react";
 import { shortRefName } from "@/git/refDisplay.ts";
 import { formatSampleBytes, shortValue } from "./format";
 import type { AdminState, PackStat } from "./types";
@@ -88,7 +89,7 @@ export function RepoOverviewCard({
                 style={{ marginLeft: "0.5rem", top: "-2px" }}
                 onClick={() => void copyDoId(String(state.meta?.doId || ""))}
               >
-                <i className="bi bi-clipboard block h-4 w-4" aria-hidden="true"></i>
+                <Clipboard className="block h-4 w-4" aria-hidden="true" />
               </button>
               <span className="invisible">{copiedDoId ? "copied" : "___copy"}</span>
             </div>

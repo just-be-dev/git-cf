@@ -1,5 +1,6 @@
 /// <reference lib="dom" />
 
+import { TriangleAlert } from "lucide-react";
 import { hydrateIsland } from "@/ui/client/hydrate";
 import { countRefsByKind } from "@/git/refDisplay.ts";
 
@@ -53,10 +54,10 @@ export function RepoAdminIsland(props: RepoAdminProps) {
     <div className="space-y-6">
       <div className="alert warn">
         <strong>
-          <i
-            className="bi bi-exclamation-triangle-fill mr-2 inline h-4 w-4 align-[-2px] text-amber-600 dark:text-amber-400"
+          <TriangleAlert
+            className="mr-2 inline h-4 w-4 align-[-2px] text-amber-600 dark:text-amber-400"
             aria-hidden="true"
-          ></i>
+          />
           Admin Area
         </strong>{" "}
         - Actions here can permanently modify repository data

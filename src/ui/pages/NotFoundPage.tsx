@@ -1,12 +1,10 @@
+import { Search } from "lucide-react";
+
 export function NotFoundPage() {
   return (
     <div className="flex flex-col items-center justify-center gap-4 py-16 text-center animate-slide-up">
       <span className="inline-grid h-16 w-16 place-items-center rounded-full bg-zinc-100 dark:bg-zinc-800/60">
-        <i
-          className="bi bi-question-circle text-zinc-400 dark:text-zinc-600"
-          style={{ fontSize: "2rem" }}
-          aria-hidden="true"
-        ></i>
+        <Search className="h-8 w-8 text-zinc-400 dark:text-zinc-600" aria-hidden="true" />
       </span>
       <div>
         <span className="mb-2 block text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">

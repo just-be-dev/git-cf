@@ -29,7 +29,7 @@ export async function renderUiView(
     return renderToReadableStream(page);
   }
 
-  const assets = await resolveDocumentAssets(env);
+  const assets = await resolveDocumentAssets(env, definition.clientEntrypoints || []);
   const element = (
     <Document
       title={(data.title as string | undefined) || definition.title}

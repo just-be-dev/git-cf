@@ -1,6 +1,7 @@
 /// <reference lib="dom" />
 
 import { useState } from "react";
+import { Clipboard, Download, FileText, Menu } from "lucide-react";
 
 import { hydrateIsland } from "@/ui/client/hydrate";
 
@@ -56,7 +57,7 @@ export function BlobActionsIsland({
       <div className="sm:hidden">
         <details className="ref-menu relative">
           <summary className="btn secondary sm inline-flex items-center gap-2">
-            <i className="bi bi-three-dots h-4 w-4" aria-hidden="true"></i>
+            <Menu className="h-4 w-4" aria-hidden="true" />
           </summary>
           <div className="fixed inset-x-0 z-20 mx-3 mt-2 rounded-xl border border-zinc-200 bg-white p-2 shadow-xl dark:border-zinc-800/60 dark:bg-zinc-900">
             <div className="flex flex-col">
@@ -66,7 +67,7 @@ export function BlobActionsIsland({
                   className="flex items-center gap-2 rounded-lg px-3 py-2 text-left hover:bg-zinc-100 dark:hover:bg-zinc-800"
                   onClick={() => void copyRawText()}
                 >
-                  <i className="bi bi-clipboard h-4 w-4" aria-hidden="true"></i>
+                  <Clipboard className="h-4 w-4" aria-hidden="true" />
                   <span>{copyLabel === "Copy" ? "Copy raw" : "Copied"}</span>
                 </button>
               ) : null}
@@ -75,7 +76,7 @@ export function BlobActionsIsland({
                   href={viewRawHref}
                   className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800"
                 >
-                  <i className="bi bi-file-earmark-text h-4 w-4" aria-hidden="true"></i>
+                  <FileText className="h-4 w-4" aria-hidden="true" />
                   <span>View raw</span>
                 </a>
               ) : null}
@@ -83,7 +84,7 @@ export function BlobActionsIsland({
                 href={rawHref}
                 className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800"
               >
-                <i className="bi bi-download h-4 w-4" aria-hidden="true"></i>
+                <Download className="h-4 w-4" aria-hidden="true" />
                 <span>Download</span>
               </a>
             </div>

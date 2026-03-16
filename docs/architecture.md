@@ -96,7 +96,7 @@ The codebase is organized into focused modules with `index.ts` export files:
 
 - React page components are rendered on the Worker through `renderToReadableStream()` in `src/ui/server/render.tsx`.
 - `src/web/templates.ts` now delegates existing `renderView()` calls into the React view registry so route/backend logic stays unchanged.
-- The browser entry at `src/ui/client/entry.tsx` imports `src/styles/app.css` and mounts focused islands for theme switching, ref picking, merge expansion, auth management, blob copy actions, and repo admin controls.
+- Client assets are split across `src/ui/client/entries/*.ts`, with `src/ui/client/entries/styles.ts` loading shared UI CSS and route-specific entrypoints mounting only the islands each page needs.
 - Production assets are built by Vite and served through the `ASSETS` binding using the generated manifest (`dist/client/manifest.json`).
 - Development runs through the Cloudflare Vite plugin so Worker code, TSX, and CSS all participate in the same hot-reload pipeline.
 - Assets config uses `html_handling: "none"` so the Worker controls routes like `/auth` without the assets layer intercepting them.

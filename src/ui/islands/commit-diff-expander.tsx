@@ -1,9 +1,8 @@
 /// <reference lib="dom" />
 
 import type { CommitFilePatchResult } from "@/git";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 
-import { highlightCode } from "@/ui/components/highlight";
 import { hydrateIsland } from "@/ui/client/hydrate";
 import { inferHljsLang } from "@/web/syntax.ts";
 
@@ -102,6 +101,63 @@ const LINE_TYPE_CLASS: Record<ReturnType<typeof lineType>, string> = {
 
 /** Render a patch string as syntax-highlighted, line-colored diff table. */
 function DiffPatchView({ patch, filePath }: { patch: string; filePath: string }) {
+  const [renderedPatch, setRenderedPatch] = useState(() => buildDiffPatchMarkup(patch, filePath));
+
+  useEffect(() => {
+    let cancelled = false;
+
+    setRenderedPatch(buildDiffPatchMarkup(patch, filePath));
+
+    const lang = inferHljsLang(filePath);
+    if (!lang) {
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    void import("@/ui/components/highlight")
+      .then(({ highlightCode }) => {
+        if (cancelled) {
+          return;
+        }
+
+        setRenderedPatch(buildDiffPatchMarkup(patch, filePath, highlightCode));
+      })
+      .catch((error) => {
+        console.error("Failed to load syntax highlighter", error);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [filePath, patch]);
+
+  return (
+    <div className="diff-patch-container">
+      <pre className="diff-patch-pre">
+        <table className={`diff-patch-table hljs ${renderedPatch.languageClass}`}>
+          <tbody>
+            {renderedPatch.rows.map((row, i) => (
+              <tr key={i} className={LINE_TYPE_CLASS[row.type]}>
+                <td className="diff-gutter">{row.prefix}</td>
+                <td
+                  className="diff-code"
+                  dangerouslySetInnerHTML={{ __html: row.html || "&nbsp;" }}
+                />
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </pre>
+    </div>
+  );
+}
+
+function buildDiffPatchMarkup(
+  patch: string,
+  filePath: string,
+  highlight?: (code: string, language?: string | null) => { html: string; languageClass: string }
+) {
   const lang = inferHljsLang(filePath);
   const rawLines = patch.split("\n");
 
@@ -140,33 +196,15 @@ function DiffPatchView({ patch, filePath }: { patch: string; filePath: string })
     // Strip prefix character for highlighting, keep it for gutter
     const prefix = raw.length > 0 ? raw[0] : " ";
     const code = raw.length > 1 ? raw.slice(1) : "";
+    const highlighted = highlight ? highlight(code, lang) : null;
 
-    // Highlight the code content (without the prefix)
-    const highlighted = highlightCode(code, lang);
-    rows.push({ type: lt, prefix, html: highlighted.html });
+    rows.push({ type: lt, prefix, html: highlighted ? highlighted.html : escapeHtml(code) });
   }
 
-  const languageClass = lang ? `language-${lang}` : "language-plaintext";
-
-  return (
-    <div className="diff-patch-container">
-      <pre className="diff-patch-pre">
-        <table className={`diff-patch-table hljs ${languageClass}`}>
-          <tbody>
-            {rows.map((row, i) => (
-              <tr key={i} className={LINE_TYPE_CLASS[row.type]}>
-                <td className="diff-gutter">{row.prefix}</td>
-                <td
-                  className="diff-code"
-                  dangerouslySetInnerHTML={{ __html: row.html || "&nbsp;" }}
-                />
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </pre>
-    </div>
-  );
+  return {
+    rows,
+    languageClass: lang ? `language-${lang}` : "language-plaintext",
+  };
 }
 
 function escapeHtml(str: string): string {

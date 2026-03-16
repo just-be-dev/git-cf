@@ -6,7 +6,7 @@ import {
   isValidRef,
   isValidPath,
   bytesToText,
-  getFileIconClass,
+  getFileIconName,
   getHighlightLangsForBlobSmart,
 } from "@/web";
 import { renderUiView } from "@/ui/server/render";
@@ -94,7 +94,7 @@ export async function handleTree(request: RouteRequest, env: Env, ctx: Execution
         name: string;
         href: string;
         isDir: boolean;
-        iconClass: string;
+        iconName: "folder" | ReturnType<typeof getFileIconName>;
         shortOid: string;
         size: string;
       }> = [];
@@ -120,7 +120,7 @@ export async function handleTree(request: RouteRequest, env: Env, ctx: Execution
                   (path ? path + "/" : "") + e.name
                 )}`,
             isDir,
-            iconClass: isDir ? "bi-folder-fill" : getFileIconClass(e.name),
+            iconName: isDir ? "folder" : getFileIconName(e.name),
             shortOid: e.oid ? e.oid.slice(0, 7) : "",
             size: "", // Size not available in tree entries, would need separate lookup
           };

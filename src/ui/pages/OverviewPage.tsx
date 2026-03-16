@@ -1,3 +1,4 @@
+import { GitBranch, Tag } from "lucide-react";
 import { MarkdownContent } from "@/ui/components/MarkdownContent";
 import { type Progress, ProgressBanner } from "@/ui/components/ProgressBanner";
 import { RepoNav } from "@/ui/components/RepoNav";
@@ -49,7 +50,7 @@ export function OverviewPage({
               Refs
             </span>
             <h3 className="flex items-center gap-2">
-              <i className="bi bi-git inline h-4 w-4 text-indigo-500" aria-hidden="true"></i>
+              <GitBranch className="inline h-4 w-4 text-indigo-500" aria-hidden="true" />
               Branches
             </h3>
             <div className="list">
@@ -60,7 +61,15 @@ export function OverviewPage({
                   </div>
                 ))
               ) : (
-                <EmptyState iconClass="bi bi-git" title="No branches yet" />
+                <EmptyState
+                  icon={
+                    <GitBranch
+                      className="h-5 w-5 text-zinc-400 dark:text-zinc-600"
+                      aria-hidden="true"
+                    />
+                  }
+                  title="No branches yet"
+                />
               )}
             </div>
           </div>
@@ -69,7 +78,7 @@ export function OverviewPage({
               Refs
             </span>
             <h3 className="flex items-center gap-2">
-              <i className="bi bi-tag-fill inline h-4 w-4 text-indigo-500" aria-hidden="true"></i>
+              <Tag className="inline h-4 w-4 text-indigo-500" aria-hidden="true" />
               Tags
             </h3>
             <div className="list">
@@ -80,7 +89,12 @@ export function OverviewPage({
                   </div>
                 ))
               ) : (
-                <EmptyState iconClass="bi bi-tag-fill" title="No tags yet" />
+                <EmptyState
+                  icon={
+                    <Tag className="h-5 w-5 text-zinc-400 dark:text-zinc-600" aria-hidden="true" />
+                  }
+                  title="No tags yet"
+                />
               )}
             </div>
           </div>

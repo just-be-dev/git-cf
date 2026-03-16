@@ -1,3 +1,4 @@
+import { RefreshCw } from "lucide-react";
 import { classifyRef, shortRefName } from "@/git/refDisplay.ts";
 import { shortValue } from "./format";
 
@@ -11,10 +12,7 @@ export function RefsCard({ refs }: RefsCardProps) {
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-xl font-semibold">References</h2>
         <button className="btn sm" type="button" onClick={() => window.location.reload()}>
-          <i
-            className="bi bi-arrow-clockwise mr-2 inline h-4 w-4 align-[-2px]"
-            aria-hidden="true"
-          ></i>
+          <RefreshCw className="mr-2 inline h-4 w-4 align-[-2px]" aria-hidden="true" />
           <span className="label">Refresh All</span>
         </button>
       </div>

@@ -1,3 +1,4 @@
+import { Check, Info, Play, Search, Trash2 } from "lucide-react";
 import { JsonResult } from "./JsonResult";
 import type { HydrationData } from "./types";
 
@@ -35,10 +36,10 @@ export function HydrationCard({
         <div className="mb-4 rounded-xl bg-indigo-50 p-3 dark:bg-indigo-900/20">
           <div className="text-sm">
             <strong>
-              <i
-                className="bi bi-info-circle-fill mr-1 inline h-4 w-4 align-[-2px] text-indigo-600 dark:text-indigo-400"
+              <Info
+                className="mr-1 inline h-4 w-4 align-[-2px] text-indigo-600 dark:text-indigo-400"
                 aria-hidden="true"
-              ></i>
+              />
               Running:
             </strong>{" "}
             {hydrationData?.stage || "unknown"}
@@ -57,10 +58,10 @@ export function HydrationCard({
       ) : hydrationStatus.includes("Completed") ? (
         <div className="mb-4 rounded-xl bg-green-50 p-3 text-sm dark:bg-green-900/20">
           <strong>
-            <i
-              className="bi bi-check-circle-fill mr-1 inline h-4 w-4 align-[-2px] text-green-600 dark:text-green-400"
+            <Check
+              className="mr-1 inline h-4 w-4 align-[-2px] text-green-600 dark:text-green-400"
               aria-hidden="true"
-            ></i>
+            />
             Hydration complete
           </strong>{" "}
           - hydrated packs are present
@@ -74,7 +75,7 @@ export function HydrationCard({
             onClick={() => void startHydration(true)}
             disabled={pending["hydration-dry-run"]}
           >
-            <i className="bi bi-search mr-2 inline h-4 w-4 align-[-2px]" aria-hidden="true"></i>
+            <Search className="mr-2 inline h-4 w-4 align-[-2px]" aria-hidden="true" />
             <span className="label">
               {pending["hydration-dry-run"] ? "Processing..." : "Dry Run Analysis"}
             </span>
@@ -85,7 +86,7 @@ export function HydrationCard({
             onClick={() => void startHydration(false)}
             disabled={pending["hydration-start"]}
           >
-            <i className="bi bi-play-fill mr-2 inline h-4 w-4 align-[-2px]" aria-hidden="true"></i>
+            <Play className="mr-2 inline h-4 w-4 align-[-2px]" aria-hidden="true" />
             <span className="label">
               {pending["hydration-start"] ? "Processing..." : "Start Hydration"}
             </span>
@@ -96,7 +97,7 @@ export function HydrationCard({
             onClick={() => void clearHydration()}
             disabled={pending["hydration-clear"]}
           >
-            <i className="bi bi-trash3 mr-2 inline h-4 w-4 align-[-2px]" aria-hidden="true"></i>
+            <Trash2 className="mr-2 inline h-4 w-4 align-[-2px]" aria-hidden="true" />
             <span className="label">
               {pending["hydration-clear"] ? "Clearing..." : "Clear Hydration State"}
             </span>

@@ -1,6 +1,7 @@
 /// <reference lib="dom" />
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { Check, GitBranch, Tag } from "lucide-react";
 
 import { hydrateIsland } from "@/ui/client/hydrate";
 
@@ -32,22 +33,24 @@ function formatRefLabel(ref: string): string {
   return /^[0-9a-f]{40}$/i.test(ref) ? `${ref.slice(0, 7)}...` : ref || "...";
 }
 
-function buildRefHref(nextRef: string): string {
-  const url = new URL(window.location.href);
+function buildRefHref(currentUrl: string, nextRef: string): string {
+  const url = new URL(currentUrl);
   url.searchParams.set("ref", nextRef);
   return url.toString();
 }
 
 function RefPickerSection({
   title,
-  iconClass,
+  kind,
   currentRef,
+  currentUrl,
   items,
   query,
 }: {
   title: string;
-  iconClass: string;
+  kind: "branch" | "tag";
   currentRef: string;
+  currentUrl: string | null;
   items: RefItem[];
   query: string;
 }) {
@@ -55,6 +58,8 @@ function RefPickerSection({
   if (!filtered.length) {
     return null;
   }
+
+  const Icon = kind === "branch" ? GitBranch : Tag;
 
   return (
     <>
@@ -64,31 +69,44 @@ function RefPickerSection({
       {filtered.map((item) => {
         const raw = decodeSafe(item.name);
         const isCurrent = raw === currentRef;
+        const href = currentUrl ? buildRefHref(currentUrl, raw) : null;
         return isCurrent ? (
           <span
             key={`${title}-${item.name}`}
             className="flex items-center gap-2 rounded border border-indigo-200 bg-indigo-50 px-2 py-1.5 text-indigo-700 dark:border-indigo-800 dark:bg-indigo-900/20 dark:text-indigo-300"
           >
-            <i className="bi bi-check-circle-fill h-4 w-4 flex-shrink-0" aria-hidden="true"></i>
-            <i
-              className={`bi ${iconClass} h-4 w-4 flex-shrink-0 text-zinc-400 dark:text-zinc-500`}
+            <Check className="h-4 w-4 flex-shrink-0" aria-hidden="true" />
+            <Icon
+              className="h-4 w-4 flex-shrink-0 text-zinc-400 dark:text-zinc-500"
               aria-hidden="true"
-            ></i>
+            />
             <span className="font-medium">{item.displayName}</span>
           </span>
-        ) : (
+        ) : href ? (
           <a
             key={`${title}-${item.name}`}
-            href={buildRefHref(raw)}
+            href={href}
             className="flex items-center gap-2 rounded px-2 py-1.5 text-zinc-700 transition-colors hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-700"
           >
             <span className="h-4 w-4 flex-shrink-0"></span>
-            <i
-              className={`bi ${iconClass} h-4 w-4 flex-shrink-0 text-zinc-400 dark:text-zinc-500`}
+            <Icon
+              className="h-4 w-4 flex-shrink-0 text-zinc-400 dark:text-zinc-500"
               aria-hidden="true"
-            ></i>
+            />
             <span>{item.displayName}</span>
           </a>
+        ) : (
+          <span
+            key={`${title}-${item.name}`}
+            className="flex items-center gap-2 rounded px-2 py-1.5 text-zinc-700 dark:text-zinc-300"
+          >
+            <span className="h-4 w-4 flex-shrink-0"></span>
+            <Icon
+              className="h-4 w-4 flex-shrink-0 text-zinc-400 dark:text-zinc-500"
+              aria-hidden="true"
+            />
+            <span>{item.displayName}</span>
+          </span>
         );
       })}
     </>
@@ -98,11 +116,16 @@ function RefPickerSection({
 export function RefPickerIsland({ owner, repo, currentRef }: RefPickerProps) {
   const rootRef = useRef<HTMLDivElement | null>(null);
   const filterRef = useRef<HTMLInputElement | null>(null);
+  const [currentUrl, setCurrentUrl] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<RefApiResponse>({ branches: [], tags: [] });
+
+  useEffect(() => {
+    setCurrentUrl(window.location.href);
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -216,10 +239,7 @@ export function RefPickerIsland({ owner, repo, currentRef }: RefPickerProps) {
                       Current
                     </div>
                     <span className="flex items-center gap-2 rounded border border-indigo-200 bg-indigo-50 px-2 py-1.5 text-indigo-700 dark:border-indigo-800 dark:bg-indigo-900/20 dark:text-indigo-300">
-                      <i
-                        className="bi bi-check-circle-fill h-4 w-4 flex-shrink-0"
-                        aria-hidden="true"
-                      ></i>
+                      <Check className="h-4 w-4 flex-shrink-0" aria-hidden="true" />
                       <span className="font-medium">
                         {/^[0-9a-f]{40}$/i.test(currentRef)
                           ? `Commit: ${formatRefLabel(currentRef)}`
@@ -231,15 +251,17 @@ export function RefPickerIsland({ owner, repo, currentRef }: RefPickerProps) {
                 ) : null}
                 <RefPickerSection
                   title="Branches"
-                  iconClass="bi-git"
+                  kind="branch"
                   currentRef={currentRef}
+                  currentUrl={currentUrl}
                   items={branches}
                   query={queryLower}
                 />
                 <RefPickerSection
                   title="Tags"
-                  iconClass="bi-tag-fill"
+                  kind="tag"
                   currentRef={currentRef}
+                  currentUrl={currentUrl}
                   items={tags}
                   query={queryLower}
                 />

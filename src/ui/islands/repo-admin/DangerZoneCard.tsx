@@ -1,3 +1,5 @@
+import { Trash2, TriangleAlert } from "lucide-react";
+
 export type DangerZoneCardProps = {
   defaultBranch: string;
   packList: string[];
@@ -14,10 +16,7 @@ export function DangerZoneCard({
   return (
     <details className="card border-2 border-red-500 p-6 dark:border-red-600">
       <summary className="cursor-pointer font-bold text-red-600 dark:text-red-500">
-        <i
-          className="bi bi-exclamation-triangle-fill mr-2 inline h-4 w-4 align-[-2px]"
-          aria-hidden="true"
-        ></i>
+        <TriangleAlert className="mr-2 inline h-4 w-4 align-[-2px]" aria-hidden="true" />
         Danger Zone - Irreversible Actions
       </summary>
       <div className="mt-6 space-y-4">
@@ -35,7 +34,7 @@ export function DangerZoneCard({
           onClick={() => void purgeRepo(defaultBranch)}
           disabled={pending["purge-repo"]}
         >
-          <i className="bi bi-trash3-fill mr-2 inline h-4 w-4 align-[-2px]" aria-hidden="true"></i>
+          <Trash2 className="mr-2 inline h-4 w-4 align-[-2px]" aria-hidden="true" />
           <span className="label">
             {pending["purge-repo"] ? "Deleting..." : "Permanently Delete Repository"}
           </span>

@@ -1,3 +1,4 @@
+import { clientEntrypoints, type ClientEntrypoint } from "@/ui/client/entrypoints";
 import { getClientManifest } from "./manifest";
 
 export type DocumentAssets = {
@@ -6,29 +7,44 @@ export type DocumentAssets = {
   preloads: string[];
 };
 
-const CLIENT_ENTRY = "src/ui/client/entry.tsx";
-
 function unique(values: string[]): string[] {
   return [...new Set(values)];
 }
 
-export async function resolveDocumentAssets(env: Env): Promise<DocumentAssets> {
+function collectManifestImports(
+  manifest: Awaited<ReturnType<typeof getClientManifest>>,
+  key: string | undefined,
+  preloadSet: Set<string>
+) {
+  if (!key || preloadSet.has(key) || !manifest?.[key]) {
+    return;
+  }
+
+  preloadSet.add(key);
+  for (const importedKey of manifest[key].imports || []) {
+    collectManifestImports(manifest, importedKey, preloadSet);
+  }
+}
+
+export async function resolveDocumentAssets(
+  env: Env,
+  moduleEntries: ClientEntrypoint[]
+): Promise<DocumentAssets> {
   if (import.meta.env.DEV) {
     return {
       styles: ["/src/ui/client/styles.css"],
-      moduleScripts: ["/@vite/client", "/src/ui/client/entry.tsx"],
+      moduleScripts: ["/@vite/client", ...moduleEntries.map((entry) => `/${entry}`)],
       preloads: [],
     };
   }
 
   const manifest = await getClientManifest(env);
-  const entry =
-    manifest?.[CLIENT_ENTRY] ||
-    (manifest
-      ? Object.entries(manifest).find(([key]) => key.endsWith(CLIENT_ENTRY) || key === "entry")?.[1]
-      : undefined);
+  const styleEntry = manifest?.[clientEntrypoints.styles];
+  const scriptEntries = moduleEntries
+    .map((entry) => manifest?.[entry])
+    .filter((entry): entry is NonNullable<typeof manifest>[string] => Boolean(entry));
 
-  if (!entry) {
+  if (!styleEntry && scriptEntries.length === 0) {
     return {
       styles: [],
       moduleScripts: [],
@@ -37,25 +53,19 @@ export async function resolveDocumentAssets(env: Env): Promise<DocumentAssets> {
   }
 
   const preloadSet = new Set<string>();
-
-  function collectImports(key: string | undefined) {
-    if (!key || preloadSet.has(key) || !manifest?.[key]) {
-      return;
+  for (const entry of scriptEntries) {
+    for (const importedKey of entry.imports || []) {
+      collectManifestImports(manifest, importedKey, preloadSet);
     }
-
-    preloadSet.add(key);
-    for (const importedKey of manifest[key].imports || []) {
-      collectImports(importedKey);
-    }
-  }
-
-  for (const importedKey of entry.imports || []) {
-    collectImports(importedKey);
   }
 
   return {
-    styles: unique(entry.css?.map((href) => `/${href}`) || []),
-    moduleScripts: [`/${entry.file}`],
+    styles: unique(
+      [...(styleEntry?.css || []), ...scriptEntries.flatMap((entry) => entry.css || [])].map(
+        (href) => `/${href}`
+      )
+    ),
+    moduleScripts: unique(scriptEntries.map((entry) => `/${entry.file}`)),
     preloads: unique(
       [...preloadSet]
         .map((key) => manifest?.[key]?.file)
