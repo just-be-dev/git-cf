@@ -56,7 +56,7 @@ export function BlobPage(props: BlobPageProps) {
   const showCopy = !isMarkdown && !isImage && !isPdf && !isBinary && !tooLarge;
 
   return (
-    <>
+    <div className="animate-slide-up">
       <RepoNav owner={owner} repo={repo} refEnc={refEnc} currentTab="browse" />
       <span className="mb-1 inline-block text-xs font-semibold uppercase tracking-wider text-accent-500 dark:text-accent-400">
         File
@@ -130,6 +130,6 @@ export function BlobPage(props: BlobPageProps) {
           ) : null}
         </div>
       </div>
-    </>
+    </div>
   );
 }

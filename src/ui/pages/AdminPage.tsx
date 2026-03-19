@@ -9,7 +9,7 @@ export type AdminPageProps = RepoAdminProps & {
 
 export function AdminPage({ progress, ...props }: AdminPageProps) {
   return (
-    <>
+    <div className="animate-slide-up">
       <RepoNav
         owner={props.owner}
         repo={props.repo}
@@ -21,6 +21,6 @@ export function AdminPage({ progress, ...props }: AdminPageProps) {
       <IslandHost name="repo-admin" props={props}>
         <RepoAdminIsland {...props} />
       </IslandHost>
-    </>
+    </div>
   );
 }

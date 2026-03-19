@@ -49,7 +49,7 @@ export function CommitsPage({
     );
 
   return (
-    <>
+    <div className="animate-slide-up">
       <RepoNav owner={owner} repo={repo} refEnc={refEnc} currentTab="commits" />
       <ProgressBanner progress={progress} />
       <span className="mb-1 inline-block text-xs font-semibold uppercase tracking-wider text-accent-500 dark:text-accent-400">
@@ -60,6 +60,6 @@ export function CommitsPage({
       <IslandHost name="merge-expander" props={{ owner, repo, commits }}>
         <MergeExpanderIsland owner={owner} repo={repo} commits={commits} />
       </IslandHost>
-    </>
+    </div>
   );
 }

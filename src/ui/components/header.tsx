@@ -17,7 +17,7 @@ const navLinkClass = (isActive: boolean): string =>
 
 export function Header({ currentView }: HeaderProps) {
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-zinc-200/80 bg-white/80 backdrop-blur-xl dark:border-zinc-800/60 dark:bg-zinc-950/80">
+    <header className="sticky top-0 z-50 w-full border-b border-zinc-200/80 bg-white/80 backdrop-blur-sm dark:border-zinc-800/60 dark:bg-zinc-950/95">
       <div className="container flex items-center justify-between gap-4 py-3">
         <nav className="flex items-center gap-1.5" aria-label="Primary">
           <a href="/" className="flex items-center gap-3 transition-opacity hover:opacity-80">

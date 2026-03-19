@@ -63,7 +63,7 @@ export function CommitPage({
   diffTruncateReason,
 }: CommitPageProps) {
   return (
-    <>
+    <div className="animate-slide-up">
       <RepoNav owner={owner} repo={repo} refEnc={refEnc} currentTab="commits" />
       <span className="mb-1 inline-block text-xs font-semibold uppercase tracking-wider text-accent-500 dark:text-accent-400">
         Commit Detail
@@ -121,6 +121,6 @@ export function CommitPage({
           parentsCount={parents.length}
         />
       </IslandHost>
-    </>
+    </div>
   );
 }
