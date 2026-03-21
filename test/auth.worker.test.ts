@@ -69,6 +69,25 @@ async function seedOwner(owner: string, token: string) {
   expect(res.status).toBe(200);
 }
 
+it("auth: management API uses bearer admin auth", async () => {
+  const wrong = await SELF.fetch("https://example.com/auth/api/users", {
+    headers: {
+      Authorization: "Bearer adm",
+    },
+  } as any);
+  expect(wrong.status).toBe(401);
+
+  const ok = await SELF.fetch("https://example.com/auth/api/users", {
+    headers: {
+      Authorization: "Bearer admin",
+    },
+  } as any);
+  expect(ok.status).toBe(200);
+
+  const body = await ok.json<{ users: unknown[] }>();
+  expect(Array.isArray(body.users)).toBe(true);
+});
+
 it("auth: centralized auth rejects push without Basic and accepts with matching owner", async () => {
   const owner = "alice";
   const repo = "auth-repo";

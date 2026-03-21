@@ -5,6 +5,22 @@ import { asBufferSource, createLogger } from "@/common";
 import { asTypedStorage } from "../repo/repoState";
 import { makeOwnerRateLimitKey, makeAdminRateLimitKey } from "./authState";
 
+type CloudflareSubtleCrypto = SubtleCrypto & {
+  timingSafeEqual(a: ArrayBuffer | ArrayBufferView, b: ArrayBuffer | ArrayBufferView): boolean;
+};
+
+const textEncoder = new TextEncoder();
+const subtle = crypto.subtle as CloudflareSubtleCrypto;
+
+function timingSafeEqualText(left: string, right: string): boolean {
+  const leftBytes = textEncoder.encode(left);
+  const rightBytes = textEncoder.encode(right);
+  const lengthsMatch = leftBytes.byteLength === rightBytes.byteLength;
+  return lengthsMatch
+    ? subtle.timingSafeEqual(leftBytes, rightBytes)
+    : !subtle.timingSafeEqual(leftBytes, leftBytes);
+}
+
 /**
  * Generates a cryptographically secure random salt
  * @returns 16-byte salt for password hashing
@@ -70,7 +86,7 @@ async function verifyToken(token: string, storedHash: string): Promise<boolean> 
   const salt = new Uint8Array(saltHex.match(/.{2}/g)!.map((byte) => parseInt(byte, 16)));
   const iterations = parseInt(iterStr, 10);
   const computed = await hashTokenWithPBKDF2(token, salt, iterations);
-  return computed === storedHash;
+  return timingSafeEqualText(computed, storedHash);
 }
 
 // Rate limiting configuration
@@ -272,7 +288,7 @@ export class AuthDurableObject extends DurableObject {
     }
 
     // Success path: verify token and clear rate limit entry
-    if (admin.length > 0 && providedToken === admin) {
+    if (admin.length > 0 && timingSafeEqualText(providedToken, admin)) {
       await astore.delete(key);
       return { ok: true, status: 200 };
     }
