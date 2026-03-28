@@ -9,8 +9,8 @@ import {
   getFileIconName,
   getHighlightLangsForBlobSmart,
 } from "@/web";
-import { renderUiView } from "@/ui/server/render";
-import { handleError } from "@/ui/server/error";
+import { renderUiView } from "@/client/server/render";
+import { handleError } from "@/client/server/error";
 import { buildCacheKeyFrom, cacheOrLoadJSONWithTTL } from "@/cache";
 import { getUnpackProgress } from "@/common";
 import { repoKey } from "@/keys";

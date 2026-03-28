@@ -1,6 +1,6 @@
 import type { HeadInfo, Ref } from "@/git";
 import { isValidOwnerRepo } from "@/web";
-import { renderUiView } from "@/ui/server/render";
+import { renderUiView } from "@/client/server/render";
 import { getUnpackProgress, getRepoStub, unauthorizedAdminBasic } from "@/common";
 import { verifyAuth } from "@/auth";
 import { repoKey } from "@/keys";

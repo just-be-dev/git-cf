@@ -4,7 +4,7 @@ import { cloudflare } from "@cloudflare/vite-plugin";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
-import { clientEntrypoints } from "./src/ui/client/entrypoints";
+import { clientEntrypoints } from "./src/client/entrypoints";
 
 export default defineConfig({
   plugins: [tailwindcss(), react(), cloudflare()],

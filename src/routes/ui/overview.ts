@@ -3,7 +3,7 @@ import type { CacheContext } from "@/cache";
 import { readPath } from "@/git";
 import { classifyRef, formatRefOption, shortRefName } from "@/git/refDisplay.ts";
 import { isValidOwnerRepo, bytesToText } from "@/web";
-import { renderUiView } from "@/ui/server/render";
+import { renderUiView } from "@/client/server/render";
 import { listReposForOwner } from "@/registry";
 import { buildCacheKeyFrom, cacheOrLoadJSON } from "@/cache";
 import { getUnpackProgress } from "@/common";

@@ -1,5 +1,5 @@
 import { AutoRouter } from "itty-router";
-import { renderUiView } from "@/ui/server/render";
+import { renderUiView } from "@/client/server/render";
 import { getAuthStub, getBearerToken, unauthorizedBearer, tooManyAttempts, json } from "@/common";
 import { isJsonObject, safeParseJsonRequest } from "@/web";
 

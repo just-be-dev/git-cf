@@ -2,7 +2,7 @@ import type { HeadInfo, Ref } from "@/git";
 import { getHeadAndRefs } from "@/git";
 import { shortRefName } from "@/git/refDisplay.ts";
 import { formatSize, HttpError } from "@/web";
-import { handleError } from "@/ui/server/error";
+import { handleError } from "@/client/server/error";
 import { buildCacheKeyFrom, cacheOrLoadJSON } from "@/cache";
 import type { debugState } from "@/do/repo/debug";
 import { getConfig } from "@/do/repo/repoConfig.ts";

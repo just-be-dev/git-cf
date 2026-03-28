@@ -8,8 +8,8 @@ import {
   readCommitFilePatch,
 } from "@/git";
 import { isValidOwnerRepo, isValidRef, isValidPath, formatWhen, OID_RE } from "@/web";
-import { renderUiView } from "@/ui/server/render";
-import { handleError } from "@/ui/server/error";
+import { renderUiView } from "@/client/server/render";
+import { handleError } from "@/client/server/error";
 import { repoKey } from "@/keys";
 import { buildCacheKeyFrom, cacheOrLoadJSONWithTTL } from "@/cache";
 import { getUnpackProgress } from "@/common";

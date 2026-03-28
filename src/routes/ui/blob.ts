@@ -9,8 +9,8 @@ import {
   bytesToText,
   getHighlightLangsForBlobSmart,
 } from "@/web";
-import { renderUiView } from "@/ui/server/render";
-import { handleError } from "@/ui/server/error";
+import { renderUiView } from "@/client/server/render";
+import { handleError } from "@/client/server/error";
 import { repoKey } from "@/keys";
 import { badRequest } from "./helpers";
 import type { RouteRequest } from "./helpers";
