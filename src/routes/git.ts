@@ -12,11 +12,36 @@ import {
   parseTagTarget,
 } from "@/git";
 import { handleFetchV2Streaming } from "@/git/operations/uploadStream/index.ts";
-import { asBodyInit, getRepoStub, unauthorizedBasic } from "@/common";
+import { asBodyInit, getRepoStub, gunzip, unauthorizedBasic } from "@/common";
 import { repoKey } from "@/keys";
 import { verifyAuth } from "@/auth";
 import { addRepoToOwner, removeRepoFromOwner } from "@/registry";
 import { buildCacheKeyFrom, cacheOrLoadJSON } from "@/cache";
+
+async function decodeUploadPackBody(request: Request): Promise<Uint8Array | Response> {
+  const rawBody = new Uint8Array(await request.arrayBuffer());
+  const contentEncoding = (request.headers.get("Content-Encoding") || "").trim().toLowerCase();
+
+  if (!contentEncoding || contentEncoding === "identity") {
+    return rawBody;
+  }
+
+  if (contentEncoding !== "gzip") {
+    return new Response(`Unsupported Content-Encoding: ${contentEncoding}\n`, {
+      status: 415,
+      headers: { "Content-Type": "text/plain; charset=utf-8" },
+    });
+  }
+
+  try {
+    return await gunzip(rawBody);
+  } catch {
+    return new Response("Invalid gzip request body\n", {
+      status: 400,
+      headers: { "Content-Type": "text/plain; charset=utf-8" },
+    });
+  }
+}
 
 /**
  * Handles Git upload-pack (fetch) POST requests.
@@ -32,7 +57,9 @@ async function handleUploadPackPOST(
   request: Request,
   ctx: ExecutionContext
 ) {
-  const body = new Uint8Array(await request.arrayBuffer());
+  const decodedBody = await decodeUploadPackBody(request);
+  if (decodedBody instanceof Response) return decodedBody;
+  const body = decodedBody;
   const gitProto = request.headers.get("Git-Protocol") || "";
   const { command } = parseV2Command(body);
   // Accept either explicit v2 header or a v2-formatted body (contains command=...)

@@ -4,16 +4,22 @@ import { asByteTransformStream, createBlobFromBytes } from "./webtypes.ts";
  * Compression and decompression utilities using Web Streams API
  */
 
+async function transformBytes(
+  data: Uint8Array,
+  stream: CompressionStream | DecompressionStream
+): Promise<Uint8Array> {
+  const body = createBlobFromBytes(data).stream().pipeThrough(stream);
+  const buf = await new Response(body).arrayBuffer();
+  return new Uint8Array(buf);
+}
+
 /**
  * Compress data using deflate algorithm
  * @param data - Uint8Array to compress
  * @returns Compressed Uint8Array
  */
 export async function deflate(data: Uint8Array): Promise<Uint8Array> {
-  const cs = new CompressionStream("deflate");
-  const stream = createBlobFromBytes(data).stream().pipeThrough(cs);
-  const buf = await new Response(stream).arrayBuffer();
-  return new Uint8Array(buf);
+  return transformBytes(data, new CompressionStream("deflate"));
 }
 
 /**
@@ -22,10 +28,25 @@ export async function deflate(data: Uint8Array): Promise<Uint8Array> {
  * @returns Decompressed Uint8Array
  */
 export async function inflate(data: Uint8Array): Promise<Uint8Array> {
-  const ds = new DecompressionStream("deflate");
-  const stream = createBlobFromBytes(data).stream().pipeThrough(ds);
-  const buf = await new Response(stream).arrayBuffer();
-  return new Uint8Array(buf);
+  return transformBytes(data, new DecompressionStream("deflate"));
+}
+
+/**
+ * Compress data using gzip
+ * @param data - Uint8Array to compress
+ * @returns Compressed Uint8Array
+ */
+export async function gzip(data: Uint8Array): Promise<Uint8Array> {
+  return transformBytes(data, new CompressionStream("gzip"));
+}
+
+/**
+ * Decompress data using gzip
+ * @param data - Compressed Uint8Array
+ * @returns Decompressed Uint8Array
+ */
+export async function gunzip(data: Uint8Array): Promise<Uint8Array> {
+  return transformBytes(data, new DecompressionStream("gzip"));
 }
 
 /**
